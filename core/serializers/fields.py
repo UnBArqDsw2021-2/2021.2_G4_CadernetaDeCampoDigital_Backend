@@ -11,13 +11,13 @@ class CPFField(serializers.CharField):
 
     def cpf_validator(self, cpf):
         if not cpf:
-            return cpf
+            raise serializers.ValidationError('CPF inválido.')
 
         # if not re.match(r'\d{3}\.\d{3}\.\d{3}-\d{2}', cpf):
-        if not re.match(r'\d{11}', cpf):
+        if not re.fullmatch(r'\d{11}', cpf):
             raise serializers.ValidationError('CPF deve conter 11 dígitos.')
 
-        numbers = [int(digit) for digit in cpf if digit.isdigit()]
+        numbers = [int(digit) for digit in cpf]
 
         if len(numbers) != 11 or len(set(numbers)) == 1:
             raise serializers.ValidationError('CPF deve conter 11 dígitos.')
@@ -33,7 +33,7 @@ class CPFField(serializers.CharField):
             raise serializers.ValidationError('CPF inválido.')
 
 
-class DAPFiel(serializers.CharField):
+class DAPField(serializers.CharField):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -41,7 +41,7 @@ class DAPFiel(serializers.CharField):
 
     def dap_validator(self, dap):
         if not dap:
-            return dap
+            raise serializers.ValidationError('DAP inválido.')
 
-        if not re.match(r'\[A-Z]{3}\d{22}', dap):
-            raise serializers.ValidationError('DAP deve estar no formato correto.')
+        if not re.fullmatch(r'[A-Z]{3}\d{22}', dap):
+            raise serializers.ValidationError('DAP deve estar no formato: [A-Z]{3}[0-9]{22}.')

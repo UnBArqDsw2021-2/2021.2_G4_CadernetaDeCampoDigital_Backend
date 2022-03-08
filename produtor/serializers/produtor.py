@@ -1,4 +1,6 @@
 from usuario.serializers.usuario import UsuarioSerializer
+from core.serializers.fields import DAPField
+
 from usuario.models import Usuario
 
 from produtor.models import Produtor
@@ -8,7 +10,7 @@ from rest_framework import serializers
 
 class ProdutorSerializer(serializers.ModelSerializer):
     usuario = UsuarioSerializer()
-
+    dap = DAPField()
     class Meta:
         model = Produtor
         fields = ('usuario', 'dap')
