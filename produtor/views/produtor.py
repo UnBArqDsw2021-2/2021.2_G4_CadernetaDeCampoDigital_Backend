@@ -6,4 +6,6 @@ from rest_framework.generics import ListCreateAPIView
 
 class ProdutorAPIView(ListCreateAPIView):
     serializer_class = ProdutorSerializer
-    queryset = Produtor.objects.all()
+
+    def get_queryset(self):
+        return Produtor.objects.all()
