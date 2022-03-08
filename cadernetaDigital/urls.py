@@ -3,8 +3,6 @@ from django.conf.urls import include, url
 
 from django.conf import settings
 
-from catalogo import urls
-
 
 url_api = []
 for app in settings.LOCAL_APPS:

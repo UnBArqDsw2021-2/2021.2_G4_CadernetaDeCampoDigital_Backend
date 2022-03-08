@@ -14,7 +14,7 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = ['*']
 
 LOCAL_APPS = (
-    'catalogo',
+    'usuario',
 )
 
 INSTALLED_APPS = (
@@ -46,7 +46,7 @@ MIDDLEWARE = (
 )
 
 # Configurar model de autenticação padrão
-# AUTH_USER_MODEL = 'model'
+AUTH_USER_MODEL = 'usuario.usuario'
 
 APPEND_SLASH = True
 
@@ -99,6 +99,8 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 DATE_FORMAT = 'd/m/Y'
+
+PHONENUMBER_DEFAULT_REGION = 'BR'
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
