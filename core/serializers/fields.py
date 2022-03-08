@@ -31,3 +31,17 @@ class CPFField(serializers.CharField):
         expected_digit = (sum_of_products * 10 % 11) % 10
         if numbers[10] != expected_digit:
             raise serializers.ValidationError('CPF inválido.')
+
+
+class DAPFiel(serializers.CharField):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        self.validators.append(self.dap_validator)
+
+    def dap_validator(self, dap):
+        if not dap:
+            return dap
+
+        if not re.match(r'\[A-Z]{3}\d{22}', dap):
+            raise serializers.ValidationError('DAP deve estar no formato correto.')

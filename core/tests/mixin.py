@@ -13,12 +13,10 @@ class APITestMixin:
 
     # Caso deseje alterar o nome, CPF, entre outros dados é
     # possível alterar esses atributos
-    idUsuario = uuid.uuid4()
     nome = 'Nome para Teste'
     cpf = '03700076037'
     tipo = Usuario.PRODUTOR
     password = '12345678'
-    telefone = '5599999999999'
     usuario_kwargs = {}
 
 
@@ -31,10 +29,15 @@ class APITestMixin:
         # client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial())
         return client
 
+    @classmethod
+    def setUpClass(cls):
+        cls.setUp = APITestMixin.setUp
+        super().setUpClass()
+
     def setUp(self):
         self.user = recipes.usuario.make(
-            idUsuario=self.idUsuario, nome=self.nome, cpf=self.cpf, tipo=self.tipo,
-            password=self.password, telefone=self.telefone, **self.usuario_kwargs
+            nome=self.nome, cpf=self.cpf, tipo=self.tipo,
+                password=self.password, **self.usuario_kwargs
         )
         self.user.id = self.user.idUsuario
         self.client = self.get_client()

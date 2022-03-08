@@ -5,4 +5,4 @@ from usuario.models import Usuario
 
 class Produtor(models.Model):
     usuario = models.OneToOneField(Usuario, on_delete=models.PROTECT)
-    dap = models.CharField(max_length=11, unique=True)
+    dap = models.CharField(max_length=25, unique=True)

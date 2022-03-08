@@ -5,4 +5,4 @@ from usuario.models import Usuario
 
 # FIXME: Por conta do tipo obrigatório, esse usuário está sendo
 # criado com um tipo fixo e pré-definido, mesmo não sendo um
-usuario = Recipe(Usuario, _fill_optional=True)
+usuario = Recipe(Usuario, telefone='5561912345678')

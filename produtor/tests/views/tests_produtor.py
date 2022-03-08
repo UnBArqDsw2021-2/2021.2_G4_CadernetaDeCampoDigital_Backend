@@ -3,6 +3,7 @@ from core.tests.mixin import APITestMixin
 from django.test import TestCase
 
 from produtor.models.produtor import Produtor
+from produtor.tests.recipes import produtor
 
 from rest_framework.reverse import reverse_lazy
 
@@ -36,3 +37,11 @@ class ProdutorAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(prod.usuario.telefone, payload["usuario"]["telefone"])
         self.assertNotEqual(prod.usuario.password, payload["usuario"]["senha"])
         self.assertEqual(prod.dap, payload["dap"])
+
+    # FIXME: Os testes a partir daqui fazem parte do list
+    # e deverão ser melhor tratados após a criação da API de list
+    def test_list_produtores(self):
+        produtor.make(_quantity=5)
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(len(response.json()), 5)
