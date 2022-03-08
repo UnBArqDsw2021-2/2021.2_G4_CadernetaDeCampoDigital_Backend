@@ -9,15 +9,12 @@ from rest_framework import serializers
 
 class UsuarioSerializer(serializers.ModelSerializer):
     cpf = CPFField()
-    dataNascimento = serializers.DateField()
-    telefone = PhoneNumberField
-    nome = serializers.CharField(max_length=80)
-    tipo = serializers.ChoiceField(choices=Usuario.TIPO_ESCOLHAS, read_only=True)
     senha = serializers.CharField(min_length=8, max_length=100, write_only=True)
 
     class Meta:
         model = Usuario
         fields = ('cpf', 'dataNascimento', 'telefone', 'nome', 'tipo', 'senha')
+        read_only_fields = ('tipo',)
 
     def create(self, validated_data):
         username = validated_data['cpf']

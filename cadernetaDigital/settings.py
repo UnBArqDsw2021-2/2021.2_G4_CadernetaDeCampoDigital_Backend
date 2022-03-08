@@ -14,8 +14,10 @@ DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = ['*']
 
 LOCAL_APPS = (
+    'core',
+
     'usuario',
-    'produtor',
+    'produtor'
 )
 
 INSTALLED_APPS = (
@@ -33,7 +35,6 @@ INSTALLED_APPS = (
     'phonenumber_field',
     'rest_framework',
     'rest_framework.authtoken'
-
 ) + LOCAL_APPS
 
 MIDDLEWARE = (
