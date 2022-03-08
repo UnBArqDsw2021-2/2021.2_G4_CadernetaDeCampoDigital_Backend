@@ -4,5 +4,5 @@ from usuario.models import Usuario
 
 
 class Produtor(models.Model):
-    user = models.OneToOneField(Usuario, on_delete=models.PROTECT)
+    usuario = models.OneToOneField(Usuario, on_delete=models.PROTECT)
     dap = models.CharField(max_length=11, unique=True)
