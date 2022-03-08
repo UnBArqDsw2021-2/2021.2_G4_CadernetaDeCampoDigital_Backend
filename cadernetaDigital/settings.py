@@ -15,6 +15,7 @@ ALLOWED_HOSTS = ['*']
 
 LOCAL_APPS = (
     'usuario',
+    'produtor',
 )
 
 INSTALLED_APPS = (
