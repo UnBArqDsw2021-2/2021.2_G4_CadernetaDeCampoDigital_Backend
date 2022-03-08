@@ -6,11 +6,12 @@ from usuario.models import Usuario
 from produtor.models import Produtor
 
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 
 class ProdutorSerializer(serializers.ModelSerializer):
     usuario = UsuarioSerializer()
-    dap = DAPField()
+    dap = DAPField(validators=[UniqueValidator(queryset=Produtor.objects.all())])
     class Meta:
         model = Produtor
         fields = ('usuario', 'dap')

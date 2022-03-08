@@ -1,6 +1,6 @@
 from core.serializers.fields import CPFField
 
-from phonenumber_field.serializerfields import PhoneNumberField
+from rest_framework.validators import UniqueValidator
 
 from usuario.models import Usuario
 
@@ -8,7 +8,7 @@ from rest_framework import serializers
 
 
 class UsuarioSerializer(serializers.ModelSerializer):
-    cpf = CPFField()
+    cpf = CPFField(validators=[UniqueValidator(queryset=Usuario.objects.all())])
     senha = serializers.CharField(min_length=8, max_length=100, write_only=True)
 
     class Meta:
