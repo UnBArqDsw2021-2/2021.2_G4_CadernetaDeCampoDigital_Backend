@@ -1,6 +1,11 @@
-from pathlib import Path
+from datetime import timedelta
+
 from decouple import config
+
 from dj_database_url import parse
+
+from pathlib import Path
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -8,7 +13,12 @@ SECRET_KEY = config('SECRET_KEY', default='not avaliable')
 DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = ['*']
 
-LOCAL_APPS = ()
+LOCAL_APPS = (
+    'core',
+
+    'usuario',
+    'produtor'
+)
 
 INSTALLED_APPS = (
     'django.contrib.admin',
@@ -17,6 +27,14 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'polymorphic',
+
+    # THIRD-PARTY
+    'corsheaders',
+    'django_filters',
+    'phonenumber_field',
+    'rest_framework',
+    'rest_framework.authtoken'
 ) + LOCAL_APPS
 
 MIDDLEWARE = (
@@ -30,7 +48,7 @@ MIDDLEWARE = (
 )
 
 # Configurar model de autenticação padrão
-# AUTH_USER_MODEL = 'model'
+AUTH_USER_MODEL = 'usuario.usuario'
 
 APPEND_SLASH = True
 
@@ -84,9 +102,26 @@ USE_I18N = True
 USE_TZ = True
 DATE_FORMAT = 'd/m/Y'
 
+PHONENUMBER_DEFAULT_REGION = 'BR'
+
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 STATIC_URL = config('STATIC_URL', default='/static/')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.UUIDField'
+
+# Classes defaults utilizadas
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ],
+    'DATE_FORMAT': '%Y-%m-%d',
+}
+
+SIMPLE_JWT = {
+    'ACCESS_TOKEN_LIFETIME': timedelta(days=5),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
+    'ROTATE_REFRESH_TOKENS': False,
+    'BLACKLIST_AFTER_ROTATION': True,
+}

@@ -7,10 +7,12 @@ services:
         ports:
             - 5000:5432
     caderneta_digital:
-         build: .
-         volumes:
-             - .:/var/www
-         ports:
-             - 8000:8000
-         depends_on:
-             - postgres
+        build: .
+        environment:
+            - DJANGO_SETTINGS_MODULE=cadernetaDigital.settings
+        volumes:
+            - .:/var/www
+        ports:
+            - 8000:8000
+        depends_on:
+            - postgres
