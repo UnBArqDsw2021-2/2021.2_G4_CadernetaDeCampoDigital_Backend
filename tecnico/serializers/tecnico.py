@@ -1,13 +1,16 @@
-from attr import fields
 from rest_framework import serializers
+from rest_framework.validators import UniqueValidator
 
 from tecnico.models import Tecnico
 
 from usuario.serializers.usuario import UsuarioSerializer
 from usuario.models.usuario import Usuario
 
+from core.serializers.fields import CREAField
+
 class TecnicoSerializer(serializers.ModelSerializer):
     usuario = UsuarioSerializer()
+    crea = CREAField(validators=[UniqueValidator(queryset=Tecnico.objects.all(), message='Técnico já cadastrado.')])
 
     class Meta:
         model = Tecnico
