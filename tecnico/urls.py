@@ -5,12 +5,7 @@ from tecnico.views.tecnico import TecnicoAPIView
 
 
 urlpatterns = [
-    url(
-        r'^tecnico/',
-        include(
-            [
-                url(r'^$', TecnicoAPIView.as_view(), name='tecnico-create'),
-            ]
-        ),
-    )
+    url(r'^tecnico/', include([
+        url(r'^$', TecnicoAPIView.as_view(), name='tecnico-create'),
+    ]))
 ]

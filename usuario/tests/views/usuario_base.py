@@ -16,15 +16,13 @@ class UsuarioApiViewBase:
             "senha": "senha_super_secreta",
         }
 
-    @parameterized.expand(
-        [
-            ('', 'Este campo não pode ser em branco.'),
-            ('123456789', 'CPF deve conter 11 dígitos.'),
-            ('11111111111', 'CPF deve conter 11 dígitos.'),
-            ('11111111181', 'CPF inválido.'),
-            ('11111111118', 'CPF inválido.'),
-        ]
-    )
+    @parameterized.expand([
+        ('', 'Este campo não pode ser em branco.'),
+        ('123456789', 'CPF deve conter 11 dígitos.'),
+        ('11111111111', 'CPF deve conter 11 dígitos.'),
+        ('11111111181', 'CPF inválido.'),
+        ('11111111118', 'CPF inválido.'),
+    ])
     def test_nao_cria_usuario_cpf_invalido(self, cpf, msg):
         payload = self._payload()
         payload['usuario']['cpf'] = cpf
@@ -56,15 +54,10 @@ class UsuarioApiViewBase:
             response.json()['usuario']['telefone'],
         )
 
-    @parameterized.expand(
-        [
-            (
-                'a' * 101,
-                'Certifique-se de que este campo não tenha mais de 100 caracteres.',
-            ),
-            ('b' * 7, 'Certifique-se de que este campo tenha mais de 8 caracteres.'),
-        ]
-    )
+    @parameterized.expand([
+        ('a' * 101, 'Certifique-se de que este campo não tenha mais de 100 caracteres.'),
+        ('b' * 7, 'Certifique-se de que este campo tenha mais de 8 caracteres.'),
+    ])
     def test_nao_cria_usuario_senha_invalida(self, senha, msg):
         payload = self._payload()
         payload['usuario']['senha'] = senha

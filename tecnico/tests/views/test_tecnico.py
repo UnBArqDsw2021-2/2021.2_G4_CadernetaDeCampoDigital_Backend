@@ -47,13 +47,11 @@ class TecnicoAPIViewTest(UsuarioApiViewBase, APITestMixin, TestCase):
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn('Técnico já cadastrado.', response.json()['crea'])
 
-    @parameterized.expand(
-        [
-            ('123456789'),
-            ('ABC1234568',),
-            ('12345678912',),
-        ]
-    )
+    @parameterized.expand([
+        '123456789',
+        'ABC1234568',
+        '12345678912',
+    ])
     def test_nao_cria_tecnico_crea_invalido(self, crea):
         payload = self._payload()
         payload['crea'] = crea
