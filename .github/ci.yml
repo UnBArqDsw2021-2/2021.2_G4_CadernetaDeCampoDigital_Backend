@@ -29,7 +29,7 @@ jobs:
           python-version: "3.10"
 
       - name: Run coverage test
-        run: docker compose run --rm --no-deps --entrypoint "./test.sh" caderneta_digital
+        run: docker compose run --rm --no-deps --entrypoint "./scripts/test.sh" caderneta_digital
 
       - uses: codecov/codecov-action@v2
         with:

@@ -5,10 +5,10 @@ down:
 	docker-compose down
 
 migrate:
-	docker-compose run --rm --entrypoint "python manage.py migrate" caderneta_digital
+	docker exec -it caderneta_digital_backend python manage.py migrate
 
 migrations:
-	docker-compose run --rm --entrypoint "python manage.py makemigrations" caderneta_digital 
+	docker exec -it caderneta_digital_backend python manage.py makemigrations
 
 test:
 	docker-compose run --no-deps --rm --entrypoint "python manage.py test" caderneta_digital 
@@ -16,8 +16,5 @@ test:
 bash:
 	docker-compose exec caderneta_digital bash
 
-debug:
-	docker-compose run --service-ports caderneta_digital
-	
 lint:
-	bash "./lint.sh"
+	bash "./scripts/lint.sh"
