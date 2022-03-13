@@ -11,10 +11,13 @@ migrations:
 	docker exec -it caderneta_digital_backend python manage.py makemigrations
 
 test:
-	docker-compose run --no-deps --rm --entrypoint "python manage.py test" caderneta_digital 
+	docker-compose run --rm --entrypoint "pytest" caderneta_digital 
 
 bash:
 	docker-compose exec caderneta_digital bash
 
 lint:
 	bash "./scripts/lint.sh"
+
+superuser:
+	bash "./scripts/create_superuser.sh"
