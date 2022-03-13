@@ -12,4 +12,6 @@ class TokenObtainPairSerializer(TokenObtainPairSerializer):
         data = super().validate(attrs)
         data.update({'idUsuario': str(self.user.idUsuario)})
         data.update({'cpf': self.user.cpf})
+        data.update({'nome': self.user.nome})
+        data.update({'tipo': self.user.tipo})
         return data

@@ -20,7 +20,7 @@ class TokenObtainPairViewTest(APITestMixin, TestCase):
     def setUp(self):
         self.cpf = '30078206006'
         self.senha = 'senha_forte'
-        self.usuario = usuario_recipe.make(cpf=self.cpf)
+        self.usuario = usuario_recipe.make(cpf=self.cpf, nome=self.nome, tipo=self.tipo)
         self.usuario.set_password(self.senha)
         self.usuario.save(update_fields=['password'])
 
@@ -32,7 +32,7 @@ class TokenObtainPairViewTest(APITestMixin, TestCase):
         })
         self.assertEqual(response.status_code, 200, response.json())
 
-        for campo in ('idUsuario', 'cpf'):
+        for campo in ('idUsuario', 'cpf', 'nome', 'tipo'):
             with self.subTest(campo=campo):
                 self.assertEqual(response.json()[campo], getattr(self, campo))
 
