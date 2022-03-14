@@ -127,4 +127,3 @@ SIMPLE_JWT = {
     # Campo identificador padrão do usuario
     'USER_ID_FIELD': 'idUsuario',
 }
-

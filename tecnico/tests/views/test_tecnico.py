@@ -6,7 +6,7 @@ from parameterized import parameterized
 from tecnico.models.tecnico import Tecnico
 from tecnico.tests.recipes import tecnico as tecnico_recipe
 
-from usuario.tests.views.usuario_base import UsuarioApiViewBase
+from usuario.tests.views.test_usuario_base import UsuarioApiViewBase
 
 
 class TecnicoAPIViewTest(UsuarioApiViewBase, APITestMixin, TestCase):

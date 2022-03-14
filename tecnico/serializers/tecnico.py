@@ -8,6 +8,7 @@ from usuario.models.usuario import Usuario
 
 from core.serializers.fields import CREAField
 
+
 class TecnicoSerializer(serializers.ModelSerializer):
     usuario = UsuarioSerializer()
     crea = CREAField(validators=[UniqueValidator(queryset=Tecnico.objects.all(), message='Técnico já cadastrado.')])

@@ -1,6 +1,5 @@
 from parameterized import parameterized
 
-from usuario.models import usuario
 from usuario.tests.recipes import usuario as usuario_recipe
 
 

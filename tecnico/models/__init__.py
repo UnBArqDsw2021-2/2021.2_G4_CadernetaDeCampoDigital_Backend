@@ -1,1 +1,1 @@
-from .tecnico import *
+from .tecnico import *  # noqa

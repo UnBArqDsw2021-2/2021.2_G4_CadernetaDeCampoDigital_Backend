@@ -1,1 +1,1 @@
-from .produtor import *
+from .produtor import *  # noqa
