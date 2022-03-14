@@ -1,7 +1,6 @@
 name: CI linter
 
-on:
-  [pull_request, push]
+on: push
 
 jobs:
   ci-style:

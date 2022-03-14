@@ -1,15 +1,14 @@
 from django.test import TestCase
 from core.tests.mixin import APITestMixin
 from parameterized import parameterized
-from django.test import TestCase
 
 from produtor.models.produtor import Produtor
 from produtor.tests.recipes import produtor
-from usuario.tests.recipes import usuario as usuario_recipe
 
 from rest_framework.reverse import reverse_lazy
 
 from usuario.tests.views.usuario_base import UsuarioApiViewBase
+
 
 class ProdutorAPIViewTest(UsuarioApiViewBase, APITestMixin, TestCase):
     url = reverse_lazy("produtor-create")

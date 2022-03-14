@@ -4,7 +4,6 @@ from usuario.tests import recipes
 from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
-import uuid
 
 class APITestMixin:
 
@@ -18,7 +17,6 @@ class APITestMixin:
     tipo = Usuario.PRODUTOR
     password = '12345678'
     usuario_kwargs = {}
-
 
     def get_header_credencial(self):
         token = RefreshToken.for_user(self.user)
@@ -46,7 +44,7 @@ class APITestMixin:
     def setUp(self):
         self.user = recipes.usuario.make(
             nome=self.nome, cpf=self.cpf, tipo=self.tipo,
-                password=self.password, **self.usuario_kwargs
+            password=self.password, **self.usuario_kwargs
         )
         self.user.id = self.user.idUsuario
         self.client = self.get_client()

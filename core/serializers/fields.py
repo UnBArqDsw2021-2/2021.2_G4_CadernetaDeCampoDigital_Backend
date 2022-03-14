@@ -46,6 +46,7 @@ class DAPField(serializers.CharField):
         if not re.fullmatch(r'[A-Z]{3}\d{22}', dap):
             raise serializers.ValidationError('DAP deve estar no formato: [A-Z]{3}[0-9]{22}.')
 
+
 class CREAField(serializers.CharField):
 
     def __init__(self, **kwargs):

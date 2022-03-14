@@ -1,10 +1,6 @@
 from core.tests.mixin import APITestMixin
 
-from datetime import timedelta
-
-from django.conf import settings
-from django.test import TestCase, override_settings
-from django.contrib.auth.hashers import make_password
+from django.test import TestCase
 
 from freezegun import freeze_time
 
@@ -98,7 +94,6 @@ class TokenVerifyViewTest(APITestMixin, TestCase):
     def test_token_expirado_refresh_valido(self):
         with freeze_time("2022-1-1"):
             refresh = RefreshToken.for_user(self.usuario)
-            access = refresh.access_token
 
         with freeze_time("2022-1-8"):
             response = self.client.post(self.url, data={'token': str(refresh)})
