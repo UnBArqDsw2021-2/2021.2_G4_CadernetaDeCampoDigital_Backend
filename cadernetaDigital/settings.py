@@ -15,9 +15,9 @@ ALLOWED_HOSTS = ['*']
 
 LOCAL_APPS = (
     'core',
-
     'usuario',
-    'produtor'
+    'produtor',
+    'tecnico',
 )
 
 INSTALLED_APPS = (
@@ -124,4 +124,7 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
+    # Campo identificador padrão do usuario
+    'USER_ID_FIELD': 'idUsuario',
 }
+
