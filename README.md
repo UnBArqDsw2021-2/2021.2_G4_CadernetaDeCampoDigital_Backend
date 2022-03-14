@@ -14,9 +14,8 @@
     <a href="https://codecov.io/gh/UnBArqDsw2021-2/2021.2_G4_CadernetaDeCampoDigital_Backend">
         <img src="https://codecov.io/gh/UnBArqDsw2021-2/2021.2_G4_CadernetaDeCampoDigital_Backend/branch/develop/graph/badge.svg?token=WWRQ3MXK7G"/>
     </a>
-    <!-- <a href="https://codeclimate.com/github/fga-eps-mds/2020.2-Anunbis/maintainability">
-        <img src="https://api.codeclimate.com/v1/badges/a7c9be364b00a8f5c84b/maintainability" />
-    </a> CODECLIMATE-->
+    <a href="https://codeclimate.com/github/UnBArqDsw2021-2/2021.2_G4_CadernetaDeCampoDigital_Backend/maintainability"><img src="https://api.codeclimate.com/v1/badges/5a726f1be0757850865f/maintainability" />
+    </a>
 </p>
 
 <p align="center">
