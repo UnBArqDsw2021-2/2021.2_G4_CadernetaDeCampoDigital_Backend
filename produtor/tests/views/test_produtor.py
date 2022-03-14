@@ -7,7 +7,7 @@ from produtor.tests.recipes import produtor
 
 from rest_framework.reverse import reverse_lazy
 
-from usuario.tests.views.usuario_base import UsuarioApiViewBase
+from usuario.tests.views.test_usuario_base import UsuarioApiViewBase
 
 
 class ProdutorAPIViewTest(UsuarioApiViewBase, APITestMixin, TestCase):

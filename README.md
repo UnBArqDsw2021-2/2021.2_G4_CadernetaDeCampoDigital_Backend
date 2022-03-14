@@ -1,5 +1,31 @@
 # Backend Caderneta de Campo Digital
 
+<div align="center">
+    <img src="https://github.com/UnBArqDsw2021-2/2021.2_G4_CadernetaDeCampoDigital_docs/blob/master/docs/assets/logo.png"></img>
+</div>
+
+<p align="center">
+    <a href="https://github.com/UnBArqDsw2021-2/2021.2_G4_CadernetaDeCampoDigital_Backend/actions/workflows/test.yml">
+	    <img alt="Test status" src="https://github.com/UnBArqDsw2021-2/2021.2_G4_CadernetaDeCampoDigital_Backend/actions/workflows/test.yml/badge.svg?style=flat">
+	</a>
+    <!-- <a href="https://github.com/UnBArqDsw2021-2/2021.2_G4_CadernetaDeCampoDigital_Backend/actions/workflows/test.yml">
+	    <img alt="Test status" src="https://github.com/UnBArqDsw2021-2/2021.2_G4_CadernetaDeCampoDigital_Backend/actions/workflows/test.yml/badge.svg?style=flat">
+	</a> DEPLOY-->
+    <a href="https://codecov.io/gh/UnBArqDsw2021-2/2021.2_G4_CadernetaDeCampoDigital_Backend">
+        <img src="https://codecov.io/gh/UnBArqDsw2021-2/2021.2_G4_CadernetaDeCampoDigital_Backend/branch/develop/graph/badge.svg?token=WWRQ3MXK7G"/>
+    </a>
+    <!-- <a href="https://codeclimate.com/github/fga-eps-mds/2020.2-Anunbis/maintainability">
+        <img src="https://api.codeclimate.com/v1/badges/a7c9be364b00a8f5c84b/maintainability" />
+    </a> CODECLIMATE-->
+</p>
+
+<p align="center">
+    <a href="https://github.com/UnBArqDsw2021-2/2021.2_G4_CadernetaDeCampoDigital_Mobile"><strong>Repositório Mobile</strong></a>
+</p>
+<p align="center">
+    <a href="https://github.com/UnBArqDsw2021-2/2021.2_G4_CadernetaDeCampoDigital_docs"><strong>Wiki do Projeto</strong></a>
+</p>
+
 ## Rodando pela primeira vez
 Para iniciar o backend pela primeira vez é necessário buildar o docker-compose e realizar os passos iniciais de _migrate_ e _createsuperuser_ do Django.
 

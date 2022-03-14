@@ -1,5 +1,5 @@
 #!/bin/bash
 
-coverage run manage.py test 
+pytest --cov --no-cov-on-fail
 coverage report -m 
-coverage xml -o cov.xml
+coverage xml -o coverage.xml
