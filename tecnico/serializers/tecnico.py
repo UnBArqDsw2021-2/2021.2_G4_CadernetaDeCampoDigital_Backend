@@ -22,7 +22,7 @@ class TecnicoSerializer(UsuarioSerializer):
         usuario = Usuario.objects.create_user(
             usuario_data['cpf'],
             password=password,
-            tipo = Usuario.TECNICO,
+            tipo=Usuario.TECNICO,
             **usuario_data
 
         )

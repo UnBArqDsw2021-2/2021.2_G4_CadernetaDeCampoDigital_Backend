@@ -17,4 +17,4 @@ class UsuarioSerializer(serializers.ModelSerializer):
         read_only_fields = ('tipo',)
 
     def create(self, validated_data):
-        raise NotImplemented('Método create não implementado pela classe pai.')
+        raise NotImplementedError('Método create não implementado pela classe pai.')

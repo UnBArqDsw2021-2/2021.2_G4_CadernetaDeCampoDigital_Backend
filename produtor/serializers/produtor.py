@@ -22,7 +22,7 @@ class ProdutorSerializer(UsuarioSerializer):
         usuario = Usuario.objects.create_user(
             usuario_data['cpf'],
             password=password,
-            tipo = Usuario.PRODUTOR,
+            tipo=Usuario.PRODUTOR,
             **usuario_data
 
         )
