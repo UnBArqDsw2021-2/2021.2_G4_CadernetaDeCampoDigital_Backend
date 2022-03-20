@@ -18,6 +18,7 @@ LOCAL_APPS = (
     'usuario',
     'produtor',
     'tecnico',
+    'propriedade'
 )
 
 INSTALLED_APPS = (
