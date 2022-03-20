@@ -101,3 +101,13 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
             'Certifque-se de que este valor seja maior ou igual a 0.01.',
             response.json()['hectares']
         )
+
+    def test_nao_cria_propriedade_cep_invalido(self):
+        payload = self._payload()
+        payload['cep'] = "123456789"
+        response = self.client.post(self.url, data=payload, format="json")
+        self.assertEqual(response.status_code, 400, response.json())
+        self.assertIn(
+            'CEP deve possuir 8 digítos numéricos.',
+            response.json()['cep']
+        )

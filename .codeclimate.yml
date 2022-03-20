@@ -5,6 +5,9 @@ checks:
 plugins:
   pep8:
     enabled: true
+    checks:
+      E501:
+        enabled: false
   Radon:
     enabled: true
   SonarPython:
