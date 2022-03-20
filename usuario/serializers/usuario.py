@@ -17,6 +17,4 @@ class UsuarioSerializer(serializers.ModelSerializer):
         read_only_fields = ('tipo',)
 
     def create(self, validated_data):
-        username = validated_data['cpf']
-        password = validated_data.pop('senha')
-        return Usuario.objects.create_user(username, password=password, **validated_data)
+        raise NotImplementedError('Método create não implementado pela classe pai.')
