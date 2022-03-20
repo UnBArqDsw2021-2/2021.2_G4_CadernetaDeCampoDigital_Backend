@@ -2,7 +2,6 @@ from core.serializers.fields import CEPField, CPFField
 
 from propriedade.models import Propriedade
 
-from rest_framework.validators import UniqueValidator
 from rest_framework import serializers
 
 from produtor.models.produtor import Produtor
@@ -18,7 +17,7 @@ class PropriedadeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Propriedade
         fields = (
-            'idPropriedade','cep', 'estado', 'cidade',
+            'idPropriedade', 'cep', 'estado', 'cidade',
             'bairro', 'complemento', 'numeroCasa', 'hectares',
             'logradouro', 'produtor', 'tecnico'
         )
@@ -27,7 +26,7 @@ class PropriedadeSerializer(serializers.ModelSerializer):
             'complemento': {'required': False},
             'hectares': {'required': False}
         }
-    
+
     def validate_produtor(self, produtor):
         try:
             produtor = Produtor.objects.get(usuario__cpf=produtor)

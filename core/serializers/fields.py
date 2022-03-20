@@ -60,12 +60,13 @@ class CREAField(serializers.CharField):
         if not re.fullmatch(r'\d{10}', crea):
             raise serializers.ValidationError('Crea deve possuir 10 digitos.')
 
+
 class CEPField(serializers.CharField):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.validators.append(self.cep_validator)
-    
+
     def cep_validator(self, cep):
         if not re.fullmatch(r'[0-9]{8}', cep):
             raise serializers.ValidationError('CEP deve possuir 8 digítos numéricos.')

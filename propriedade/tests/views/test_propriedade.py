@@ -12,8 +12,6 @@ from produtor.tests.recipes import produtor
 
 from tecnico.tests.recipes import tecnico
 
-from usuario.models import Usuario
-
 
 class PropriedadeAPIViewTest(APITestMixin, TestCase):
     url = reverse_lazy("propriedade-create")
@@ -103,6 +101,3 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
             'Certifque-se de que este valor seja maior ou igual a 0.01.',
             response.json()['hectares']
         )
-
-
-
