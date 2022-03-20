@@ -1,0 +1,1 @@
+from .propriedade import *  # noqa
