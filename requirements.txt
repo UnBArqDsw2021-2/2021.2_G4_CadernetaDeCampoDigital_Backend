@@ -22,4 +22,4 @@ pytest-django==4.5.2
 pytest-subtests==0.7.0
 pytest==7.1.0
 
-xhtml2pdf==0.2.5
+xhtml2pdf==0.2.6
