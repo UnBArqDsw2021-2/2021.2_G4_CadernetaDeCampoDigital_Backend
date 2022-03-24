@@ -1,8 +1,5 @@
 from rest_framework import serializers
 
-from propriedade.serializers.propriedade import PropriedadeSerializer
-from propriedade.models.propriedade import Propriedade
-
 from talhao.models import Talhao
 
 
@@ -18,4 +15,3 @@ class TalhaoSerializer(serializers.ModelSerializer):
                 message='Este número de talhão já existe nessa propriedade.'
             )
         ]
-        

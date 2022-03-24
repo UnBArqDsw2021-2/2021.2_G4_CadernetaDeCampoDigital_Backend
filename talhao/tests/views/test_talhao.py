@@ -9,7 +9,6 @@ from propriedade.tests.recipes import propriedade
 from talhao.models import Talhao
 from talhao.tests.recipes import talhao
 
-import uuid
 
 class TalhaoAPIViewTest(APITestMixin, TestCase):
     url = reverse_lazy("talhao-create")
@@ -22,7 +21,7 @@ class TalhaoAPIViewTest(APITestMixin, TestCase):
             "idPropriedade": self.propriedade.idPropriedade,
             "numero": 1
         }
-        
+
     def test_cria_talhao(self):
         response = self.client.post(self.url, data=self._payload(), format="json")
 
@@ -33,10 +32,7 @@ class TalhaoAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(talhao.idPropriedade, self.propriedade)
         self.assertEqual(talhao.numero, 1)
 
-
-    @parameterized.expand([
-        'idPropriedade', 'numero'
-    ])
+    @parameterized.expand(['idPropriedade', 'numero'])
     def test_nao_cria_talhao_atributos_obrigatorios(self, campo):
         payload = self._payload()
         del payload[campo]
