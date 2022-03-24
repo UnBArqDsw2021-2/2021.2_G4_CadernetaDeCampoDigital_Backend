@@ -62,7 +62,7 @@ class TalhaoAPIViewTest(APITestMixin, TestCase):
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
-            'Pk inválido "00000000-0000-0000-0000-000000000000" - objeto não existe.',
+            f'Pk inválido "{payload["idPropriedade"]}" - objeto não existe.',
             response.json()['idPropriedade']
         )
 
