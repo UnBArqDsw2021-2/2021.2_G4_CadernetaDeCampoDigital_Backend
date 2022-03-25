@@ -11,7 +11,11 @@ migrations:
 	docker exec -it caderneta_digital_backend python manage.py makemigrations
 
 test:
+ifeq ($(TEST),)
 	docker-compose run --rm --entrypoint "pytest $(FILE) -s" caderneta_digital
+else
+	docker-compose run --rm --entrypoint "pytest $(FILE) -s -k $(TEST)" caderneta_digital
+endif
 
 bash:
 	docker-compose exec caderneta_digital bash
