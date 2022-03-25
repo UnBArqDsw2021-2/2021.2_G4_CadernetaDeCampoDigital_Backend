@@ -20,7 +20,8 @@ LOCAL_APPS = (
     'tecnico',
     'propriedade',
     'talhao',
-    'plantio'
+    'plantio',
+    'cultura'
 )
 
 INSTALLED_APPS = (

@@ -1,6 +1,6 @@
-from datetime import date, timedelta
+from cultura.tests.recipes import cultura
 
-from decimal import Decimal
+from datetime import date, timedelta
 
 from django.test import TestCase
 
@@ -21,11 +21,12 @@ class PlantioAPIViewTest(APITestMixin, TestCase):
 
     def setUp(self):
         self.talhao = talhao.make()
+        self.cultura = cultura.make()
 
     def _payload(self):
         return {
             'talhao': self.talhao.idTalhao,
-            # 'cultura': self.cultura.idCultura,
+            'cultura': self.cultura.idCultura,
             'dataPlantio': date.today(),
             'estado': UF_CHOICES[7][0]
         }
@@ -38,13 +39,12 @@ class PlantioAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(Plantio.objects.count(), 1)
 
         plantio = Plantio.objects.first()
-        # self.assertEqual(plantio.cultura.idCultura, payload["cultura"])
+        self.assertEqual(plantio.cultura.idCultura, payload["cultura"])
         self.assertEqual(plantio.talhao.idTalhao, payload["talhao"])
         self.assertEqual(plantio.dataPlantio, payload["dataPlantio"])
         self.assertEqual(plantio.estado, payload["estado"])
 
-    # @parameterized.expand(['cultura', 'talhao', 'dataPlantio', 'estado'])
-    @parameterized.expand(['talhao', 'dataPlantio', 'estado'])
+    @parameterized.expand(['cultura', 'talhao', 'dataPlantio', 'estado'])
     def test_nao_cria_plantio_atributos_obrigatorios(self, campo):
         payload = self._payload()
         del payload[campo]
@@ -52,8 +52,7 @@ class PlantioAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn('Este campo é obrigatório.', response.json()[campo])
 
-    # @parameterized.expand([('cultura', 'Cultura'), ('talhao', 'Talhao')])
-    @parameterized.expand([('talhao', 'Talhao')])
+    @parameterized.expand([('cultura', 'Cultura'), ('talhao', 'Talhao')])
     def test_nao_cria_plantio_objeto_inexistente(self, campo, msg):
         payload = self._payload()
         payload[campo] = '00000000-0000-0000-0000-000000000000'

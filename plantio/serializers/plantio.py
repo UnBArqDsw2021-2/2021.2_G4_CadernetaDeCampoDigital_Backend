@@ -9,8 +9,7 @@ class PlantioSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Plantio
-        # fields = ('idPlantio', 'cultura', 'talhao', 'dataPlantio', 'estado')
-        fields = ('idPlantio', 'talhao', 'dataPlantio', 'estado')
+        fields = ('idPlantio', 'cultura', 'talhao', 'dataPlantio', 'estado')
         read_only_fields = ('idPlantio',)
 
     def validate_dataPlantio(self, dataPlantio):
