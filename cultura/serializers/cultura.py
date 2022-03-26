@@ -1,5 +1,3 @@
-from datetime import date
-
 from cultura.models import Cultura
 
 from rest_framework import serializers

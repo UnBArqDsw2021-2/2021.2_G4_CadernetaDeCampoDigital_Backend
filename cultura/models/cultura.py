@@ -1,5 +1,3 @@
-from core.consts.estados import UF_CHOICES
-
 from django.db import models
 
 import uuid
