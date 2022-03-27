@@ -1,2 +1,1 @@
-import imp
-from .tipo_agrotoxico import *
+from .agrotoxico import *
