@@ -1,1 +1,1 @@
-from .agrotoxico import *
+from .agrotoxico import *   # noqa
