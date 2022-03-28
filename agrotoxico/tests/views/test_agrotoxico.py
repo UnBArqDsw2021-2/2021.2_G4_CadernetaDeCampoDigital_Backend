@@ -6,30 +6,35 @@ from rest_framework.reverse import reverse_lazy
 
 from parameterized import parameterized
 
-from agrotoxico.models import TipoAgrotoxico
+from agrotoxico.models import Agrotoxico
 from agrotoxico.tests.recipes import tipo_agrotoxico as ta
 
 
-class TipoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
-    url = reverse_lazy("tipo-agrotoxico-create")
+class AgrotoxicoAPIViewTest(APITestMixin, TestCase):
+    url = reverse_lazy("agrotoxico-create")
+
+    def setUp(self):
+        self.tipo_agrotoxico = ta.make()
 
     def _payload(self):
         return {
-            'nome': 'Inseticida'
+            'nome': 'Mata Muriçoca',
+            'tipo': self.tipo_agrotoxico.idTipoAgrotoxico
         }
 
-    def test_cria_tipo_agrotoxico(self):
+    def test_cria_agrotoxico(self):
         payload = self._payload()
 
         response = self.client.post(self.url, data=payload, format="json")
         self.assertEqual(response.status_code, 201, response.json())
-        self.assertEqual(TipoAgrotoxico.objects.count(), 1)
+        self.assertEqual(Agrotoxico.objects.count(), 1)
 
-        tipo_agrotoxico = TipoAgrotoxico.objects.first()
+        tipo_agrotoxico = Agrotoxico.objects.first()
         self.assertEqual(tipo_agrotoxico.nome, payload["nome"])
+        self.assertEqual(tipo_agrotoxico.tipo.idTipoAgrotoxico, payload["tipo"])
 
-    @parameterized.expand(['nome'])
-    def test_nao_cria_tipo_agrotoxico_atributos_obrigatorios(self, campo):
+    @parameterized.expand(['nome', 'tipo'])
+    def test_nao_cria_agrotoxico_atributos_obrigatorios(self, campo):
         payload = self._payload()
         del payload[campo]
 
@@ -37,14 +42,17 @@ class TipoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn('Este campo é obrigatório.', response.json()[campo])
 
-    def test_nao_cria_tipo_agrotoxico_nome_nao_unico(self):
+    @parameterized.expand([('tipo')])
+    def test_nao_cria_agrotoxico_objeto_inexistente(self, campo):
         payload = self._payload()
-        ta.make(nome=payload['nome'])
+        payload[campo] = '00000000-0000-0000-0000-000000000000'
 
         response = self.client.post(self.url, data=payload, format="json")
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
-            'Esse campo deve ser  único.', response.json()['nome'])
+            f"Pk inválido \"{payload[campo]}\" - objeto não existe.",
+            response.json()[campo]
+        )
 
     @parameterized.expand([
         ("", "Este campo não pode ser em branco."),
