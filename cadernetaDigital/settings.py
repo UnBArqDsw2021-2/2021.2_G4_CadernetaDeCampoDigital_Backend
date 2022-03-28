@@ -19,7 +19,9 @@ LOCAL_APPS = (
     'produtor',
     'tecnico',
     'propriedade',
-    'talhao'
+    'talhao',
+    'plantio',
+    'cultura'
 )
 
 INSTALLED_APPS = (
