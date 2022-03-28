@@ -1,4 +1,4 @@
-from core.consts.estados import UF_CHOICES
+from core.consts.plantios import PLANTIO_CHOICES
 
 from cultura.models import Cultura
 
@@ -14,4 +14,4 @@ class Plantio(models.Model):
     cultura = models.ForeignKey(Cultura, on_delete=models.PROTECT)
     talhao = models.ForeignKey(Talhao, on_delete=models.PROTECT)
     dataPlantio = models.DateField()
-    estado = models.CharField(max_length=2, choices=UF_CHOICES)
+    estado = models.CharField(max_length=10, choices=PLANTIO_CHOICES)

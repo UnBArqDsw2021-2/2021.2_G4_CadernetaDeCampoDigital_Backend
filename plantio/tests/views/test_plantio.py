@@ -5,7 +5,7 @@ from datetime import date, timedelta
 from django.test import TestCase
 
 from core.tests.mixin import APITestMixin
-from core.consts.estados import UF_CHOICES
+from core.consts.plantios import PLANTIO_CHOICES
 
 from rest_framework.reverse import reverse_lazy
 
@@ -28,7 +28,7 @@ class PlantioAPIViewTest(APITestMixin, TestCase):
             'talhao': self.talhao.idTalhao,
             'cultura': self.cultura.idCultura,
             'dataPlantio': date.today(),
-            'estado': UF_CHOICES[7][0]
+            'estado': PLANTIO_CHOICES[1][0]
         }
 
     def test_cria_plantio(self):
