@@ -7,6 +7,7 @@ from rest_framework.reverse import reverse_lazy
 from parameterized import parameterized
 
 from propriedade.models import Propriedade
+from propriedade.tests.recipes import propriedade
 
 from produtor.tests.recipes import produtor
 
@@ -14,7 +15,7 @@ from tecnico.tests.recipes import tecnico
 
 
 class PropriedadeAPIViewTest(APITestMixin, TestCase):
-    url = reverse_lazy("propriedade-create")
+    url = reverse_lazy("propriedade-create-list")
 
     def setUp(self):
         self.produtor = produtor.make(usuario__cpf='66326787009')
@@ -111,3 +112,21 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
             'CEP deve possuir 8 digítos numéricos.',
             response.json()['cep']
         )
+
+    def test_lista_propriedade_de_um_produtor_autenticado(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(self.produtor.usuario))
+
+        propriedade.make(produtor=self.produtor, tecnico=self.tecnico)
+
+        response = self.client.get(self.url, format="json")
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertNotEqual([], response.json())
+
+    def test_lista_propriedade_de_um_tecnico_autenticado(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(self.tecnico.usuario))
+
+        propriedade.make(produtor=self.produtor, tecnico=self.tecnico)
+
+        response = self.client.get(self.url, format="json")
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertNotEqual([], response.json())
