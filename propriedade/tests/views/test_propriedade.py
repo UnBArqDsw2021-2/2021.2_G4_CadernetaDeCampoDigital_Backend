@@ -132,3 +132,39 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
         response = self.client.get(self.url, format="json")
         self.assertEqual(response.status_code, 200, response.json())
         self.assertEqual(1, len(response.json()))
+
+
+class PropriedadeRetrieveAPIViewTest(APITestMixin, TestCase):
+
+    def setUp(self):
+        self.produtor = produtor.make(usuario__cpf='66326787009')
+        self.tecnico = tecnico.make(usuario__cpf='42205106058')
+        self.propriedade = propriedade.make(produtor=self.produtor, tecnico=self.tecnico)
+        self.url = reverse_lazy(
+            "propriedade-detail",
+            kwargs={'pk': self.propriedade.idPropriedade}
+        )
+
+    def test_detalha_propriedade_existente(self):
+        response = self.client.get(self.url, format="json")
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(11, len(response.json()))
+
+        self.assertEqual(str(self.propriedade.cep), response.json()["cep"])
+        self.assertEqual(self.propriedade.estado, response.json()["estado"])
+        self.assertEqual(self.propriedade.cidade, response.json()["cidade"])
+        self.assertEqual(self.propriedade.bairro, response.json()["bairro"])
+        self.assertEqual(self.propriedade.complemento, response.json()["complemento"])
+        self.assertEqual(self.propriedade.numeroCasa, response.json()["numeroCasa"])
+        self.assertEqual(self.propriedade.hectares, response.json()["hectares"])
+        self.assertEqual(self.propriedade.logradouro, response.json()["logradouro"])
+
+    def test_nao_detalha_propriedade_inexistente(self):
+        url = reverse_lazy(
+            "propriedade-detail",
+            kwargs={'pk': '00000000-0000-4000-8000-000000000000'}
+        )
+
+        response = self.client.get(url, format="json")
+        self.assertEqual(response.status_code, 404, response.json())
+        self.assertIn('Não encontrado.', response.json()['detail'])
