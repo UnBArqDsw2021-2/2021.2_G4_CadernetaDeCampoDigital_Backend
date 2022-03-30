@@ -1,4 +1,4 @@
-from core.consts.usuarios import PRODUTOR, TECNICO
+from core.consts.usuarios import TECNICO
 
 from propriedade.models import Propriedade
 from propriedade.serializers.propriedade import PropriedadeSerializer
@@ -13,4 +13,3 @@ class PropriedadeAPIView(ListCreateAPIView):
         if self.request.user.tipo == TECNICO:
             return Propriedade.objects.filter(tecnico=self.request.user.tecnico)
         return Propriedade.objects.filter(produtor=self.request.user.produtor)
-
