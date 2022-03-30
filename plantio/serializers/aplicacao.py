@@ -27,6 +27,6 @@ class AplicacaoAgrotoxicoSerializer(serializers.ModelSerializer):
 
         if query.exists():
             raise serializers.ValidationError(
-                'Esse agrotóxico já foi aplicado nessa plantação na data {data["dataAplicacao"]}.')
+                f'Esse agrotóxico já foi aplicado nessa plantação na data {data["dataAplicacao"]}.')
 
         return data
