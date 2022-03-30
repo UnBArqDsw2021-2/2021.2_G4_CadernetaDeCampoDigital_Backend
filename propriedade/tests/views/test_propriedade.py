@@ -117,16 +117,18 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(self.produtor.usuario))
 
         propriedade.make(produtor=self.produtor, tecnico=self.tecnico)
+        propriedade.make(produtor=produtor.make(), tecnico=self.tecnico)
 
         response = self.client.get(self.url, format="json")
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertNotEqual([], response.json())
+        self.assertEqual(1, len(response.json()))
 
     def test_lista_propriedade_de_um_tecnico_autenticado(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(self.tecnico.usuario))
 
         propriedade.make(produtor=self.produtor, tecnico=self.tecnico)
+        propriedade.make(produtor=self.produtor, tecnico=tecnico.make())
 
         response = self.client.get(self.url, format="json")
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertNotEqual([], response.json())
+        self.assertEqual(1, len(response.json()))
