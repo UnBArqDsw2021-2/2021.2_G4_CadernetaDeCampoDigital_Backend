@@ -22,11 +22,12 @@ class AplicacaoAgrotoxicoSerializer(serializers.ModelSerializer):
         return dataAplicacao
 
     def validate(self, data):
-        query = AplicacaoAgrotoxico.objects.filter(
-            plantio=data['plantio'], agrotoxico=data['agrotoxico'], dataAplicacao=data['dataAplicacao'])
+        if data.get('agrotoxico'):
+            query = AplicacaoAgrotoxico.objects.filter(
+                plantio=data['plantio'], agrotoxico=data['agrotoxico'], dataAplicacao=data['dataAplicacao'])
 
-        if query.exists():
-            raise serializers.ValidationError(
-                f'Esse agrotóxico já foi aplicado nessa plantação na data {data["dataAplicacao"]}.')
+            if query.exists():
+                raise serializers.ValidationError(
+                    f'Esse agrotóxico já foi aplicado nessa plantação na data {data["dataAplicacao"]}.')
 
         return data

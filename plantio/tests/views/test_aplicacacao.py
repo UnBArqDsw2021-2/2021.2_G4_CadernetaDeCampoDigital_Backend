@@ -47,6 +47,24 @@ class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(associacao.dosagemAplicacao, payload['dosagemAplicacao'])
         self.assertEqual(associacao.estadoAnalise, 'A')
 
+    def test_cria_aplicacao_agrotoxico_sem_atributos_opcionais(self):
+        payload = self._payload()
+        # for campo in ('agrotoxico', 'fotoAgrotoxico', 'dosagemAplicacao'):
+        for campo in ('agrotoxico', 'dosagemAplicacao'):
+            del payload[campo]
+
+        response = self.client.post(self.url, data=payload, format="json")
+        self.assertEqual(response.status_code, 201, response.json())
+        self.assertEqual(AplicacaoAgrotoxico.objects.count(), 1)
+
+        associacao = AplicacaoAgrotoxico.objects.first()
+        self.assertEqual(associacao.plantio, self.plantio)
+        self.assertIsNone(associacao.agrotoxico)
+        self.assertEqual(associacao.dataAplicacao, payload['dataAplicacao'])
+        # self.assertIsNone(associacao.caminhoFotoAgrotoxico)
+        self.assertIsNone(associacao.dosagemAplicacao)
+        self.assertEqual(associacao.estadoAnalise, 'A')
+
     @parameterized.expand(['plantio', 'dataAplicacao'])
     def test_nao_cria_aplicacao_atributos_obrigatorios(self, campo):
         payload = self._payload()

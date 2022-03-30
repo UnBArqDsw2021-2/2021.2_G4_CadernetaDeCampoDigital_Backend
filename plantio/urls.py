@@ -8,6 +8,11 @@ from plantio.views.aplicacao import AplicacaoAgrotoxicoAPIView
 urlpatterns = [
     url(r'^plantio/', include([
         url(r'^$', PlantioAPIView.as_view(), name='plantio-create'),
-        url(r'^aplicar/$', AplicacaoAgrotoxicoAPIView.as_view(), name='plantio-associar'),
+
+        url(r'^aplicar/', include([
+            url(
+                r'agrotoxico/$', AplicacaoAgrotoxicoAPIView.as_view(),
+                name='plantio-associar'),
+        ])),
     ]))
 ]
