@@ -1,3 +1,4 @@
+from functools import partial
 from usuario.models import Usuario
 from usuario.tests import recipes
 
@@ -25,6 +26,7 @@ class APITestMixin:
     def get_client(self):
         client = APIClient()
         client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial())
+        client.post = partial(client.post, format='json')
         return client
 
     @classmethod

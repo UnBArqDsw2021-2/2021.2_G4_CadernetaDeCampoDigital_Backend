@@ -35,7 +35,7 @@ class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
     def test_cria_aplicacao_agrotoxico(self):
         payload = self._payload()
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 201, response.json())
         self.assertEqual(AplicacaoAgrotoxico.objects.count(), 1)
 
@@ -53,7 +53,7 @@ class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
         for campo in ('agrotoxico', 'dosagemAplicacao'):
             del payload[campo]
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 201, response.json())
         self.assertEqual(AplicacaoAgrotoxico.objects.count(), 1)
 
@@ -69,7 +69,7 @@ class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
     def test_nao_cria_aplicacao_atributos_obrigatorios(self, campo):
         payload = self._payload()
         del payload[campo]
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn('Este campo é obrigatório.', response.json()[campo])
 
@@ -77,7 +77,7 @@ class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
     def test_nao_cria_aplicacao_objeto_inexistente(self, campo, msg):
         payload = self._payload()
         payload[campo] = '00000000-0000-0000-0000-000000000000'
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             f"Pk inválido \"{payload[campo]}\" - objeto não existe.",
@@ -90,7 +90,7 @@ class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
             plantio=self.plantio, agrotoxico=self.agrotoxico,
             dataAplicacao=payload['dataAplicacao'], dosagemAplicacao=payload['dosagemAplicacao']
         )
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             f'Esse agrotóxico já foi aplicado nessa plantação na data {payload["dataAplicacao"]}.',
@@ -100,7 +100,7 @@ class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
     def test_nao_cria_aplicacao_data_no_futuro(self):
         payload = self._payload()
         payload['dataAplicacao'] += timedelta(days=1)
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             'Data de aplicação no futuro.', response.json()['dataAplicacao'])

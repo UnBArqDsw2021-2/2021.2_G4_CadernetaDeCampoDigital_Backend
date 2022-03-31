@@ -1,5 +1,4 @@
 from django.test import TestCase
-from core.tests.mixin import APITestMixin
 from parameterized import parameterized
 
 from produtor.models.produtor import Produtor
@@ -10,7 +9,7 @@ from rest_framework.reverse import reverse_lazy
 from usuario.tests.views.test_usuario_base import UsuarioApiViewBase
 
 
-class ProdutorAPIViewTest(UsuarioApiViewBase, APITestMixin, TestCase):
+class ProdutorAPIViewTest(UsuarioApiViewBase, TestCase):
     url = reverse_lazy("produtor-create")
 
     def _payload(self):
@@ -22,7 +21,7 @@ class ProdutorAPIViewTest(UsuarioApiViewBase, APITestMixin, TestCase):
     def test_cria_produtor(self):
         payload = self._payload()
 
-        response = self.client.post(self.url, payload, format="json")
+        response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, 201, response.json())
         self.assertEqual(Produtor.objects.count(), 1)
 
@@ -41,7 +40,7 @@ class ProdutorAPIViewTest(UsuarioApiViewBase, APITestMixin, TestCase):
         payload = self._payload()
         payload['dap'] = dap
 
-        response = self.client.post(self.url, payload, format="json")
+        response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(msg, response.json()['dap'])
 
@@ -49,6 +48,6 @@ class ProdutorAPIViewTest(UsuarioApiViewBase, APITestMixin, TestCase):
         payload = self._payload()
         produtor.make(dap=payload["dap"])
 
-        response = self.client.post(self.url, payload, format="json")
+        response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, 400)
         self.assertIn("Esse campo deve ser  único.", response.json()["dap"])
