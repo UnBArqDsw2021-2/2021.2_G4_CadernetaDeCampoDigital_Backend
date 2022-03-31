@@ -16,7 +16,7 @@ class AgrotoxicoEsperaDetailAPIView(APIView):
     def post(self, request, pk=None):
         agrotoxico = self.get_object(pk)
 
-        serializer = self.serializer_class(data=request.data)
+        serializer = self.serializer_class(data=request.data, context={"agrotoxico": agrotoxico})
         serializer.is_valid(raise_exception=True)
 
         serializer.save(agrotoxico=agrotoxico)

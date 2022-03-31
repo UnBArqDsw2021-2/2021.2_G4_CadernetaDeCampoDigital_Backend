@@ -14,7 +14,7 @@ class Agrotoxico(models.Model):
 
     @property
     def espera(self):
-        return self.esperas_set
+        return self.espera_set
 
 
 class Espera(models.Model):

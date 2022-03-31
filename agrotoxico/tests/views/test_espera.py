@@ -9,7 +9,7 @@ from parameterized import parameterized
 from agrotoxico.models import Espera
 
 from cultura.tests.recipes import cultura as c
-from agrotoxico.tests.recipes import agrotoxico as a
+from agrotoxico.tests.recipes import agrotoxico as a, espera as e
 
 
 class EsperaAPIViewTest(APITestMixin, TestCase):
@@ -86,4 +86,16 @@ class EsperaAPIViewTest(APITestMixin, TestCase):
         self.assertIn(
             "Certifque-se de que este valor seja maior ou igual a 0.",
             response.json()["diasCarencia"]
+        )
+
+    def test_nao_cria_espera_cultura_repetida(self):
+        payload = self._payload()
+        e.make(cultura=self.cultura, agrotoxico=self.agrotoxico)
+
+        response = self.client.post(self.url(), payload)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(
+            "Cultura já relacionada com o agrotóxico.",
+            response.json()["cultura"]
         )
