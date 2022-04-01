@@ -8,23 +8,21 @@ from parameterized import parameterized
 
 from agrotoxico.models import Espera
 
-from cultura.tests.recipes import cultura as c
-from agrotoxico.tests.recipes import agrotoxico as a, espera as e
+from cultura.tests.recipes import cultura as cultura_recipe
+from agrotoxico.tests.recipes import agrotoxico as agrotoxico_recipe, espera as espera_recipe
 
 
 class EsperaAPIViewTest(APITestMixin, TestCase):
 
-    def url(self, idAgrotoxico=None):
-        if idAgrotoxico is None:
-            idAgrotoxico = self.agrotoxico.idAgrotoxico
-        return reverse_lazy('agrotoxico-espera-cultura', args=[idAgrotoxico])
+    url = reverse_lazy('agrotoxico-espera-cultura')
 
     def setUp(self):
-        self.cultura = c.make()
-        self.agrotoxico = a.make()
+        self.cultura = cultura_recipe.make()
+        self.agrotoxico = agrotoxico_recipe.make()
 
     def _payload(self):
         return {
+            "agrotoxico": self.agrotoxico.idAgrotoxico,
             "cultura": self.cultura.idCultura,
             "diasCarencia": 1
         }
@@ -32,7 +30,7 @@ class EsperaAPIViewTest(APITestMixin, TestCase):
     def test_cria_espera(self):
         payload = self._payload()
 
-        response = self.client.post(self.url(), payload)
+        response = self.client.post(self.url, payload)
 
         self.assertEqual(response.status_code, 201, response.json())
         self.assertEqual(Espera.objects.count(), 1)
@@ -47,16 +45,16 @@ class EsperaAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         del payload[campo]
 
-        response = self.client.post(self.url(), payload)
+        response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn('Este campo é obrigatório.', response.json()[campo])
 
-    @parameterized.expand([('cultura')])
+    @parameterized.expand(['cultura', 'agrotoxico'])
     def test_nao_cria_espera_objeto_inexistente(self, campo):
         payload = self._payload()
         payload[campo] = '00000000-0000-0000-0000-000000000000'
 
-        response = self.client.post(self.url(), payload)
+        response = self.client.post(self.url, payload)
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
@@ -64,23 +62,11 @@ class EsperaAPIViewTest(APITestMixin, TestCase):
             response.json()[campo]
         )
 
-    def test_nao_cria_espera_agrotoxico_inexistente(self):
-        payload = self._payload()
-        idAgrotoxico = "00000000-0000-0000-0000-000000000000"
-
-        response = self.client.post(self.url(idAgrotoxico), payload)
-
-        self.assertEqual(response.status_code, 404, response.json())
-        self.assertIn(
-            "Não encontrado.",
-            response.json()["detail"]
-        )
-
     def test_nao_cria_espera_dias_carencia_negativo(self):
         payload = self._payload()
         payload["diasCarencia"] = -1
 
-        response = self.client.post(self.url(), payload)
+        response = self.client.post(self.url, payload)
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
@@ -90,12 +76,11 @@ class EsperaAPIViewTest(APITestMixin, TestCase):
 
     def test_nao_cria_espera_cultura_repetida(self):
         payload = self._payload()
-        e.make(cultura=self.cultura, agrotoxico=self.agrotoxico)
+        espera_recipe.make(cultura=self.cultura, agrotoxico=self.agrotoxico)
 
-        response = self.client.post(self.url(), payload)
-
+        response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, 400)
         self.assertIn(
-            "Cultura já relacionada com o agrotóxico.",
-            response.json()["cultura"]
+            "Os campos cultura, agrotoxico devem criar um set único.",
+            response.json()["non_field_errors"][0]
         )
