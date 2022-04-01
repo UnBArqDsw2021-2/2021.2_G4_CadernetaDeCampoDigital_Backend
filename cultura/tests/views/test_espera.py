@@ -81,6 +81,6 @@ class EsperaAPIViewTest(APITestMixin, TestCase):
         response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, 400)
         self.assertIn(
-            "Os campos cultura, agrotoxico devem criar um set único.",
-            response.json()["non_field_errors"][0]
+            "Cultura já relacionada com agrotóxico.",
+            response.json()["non_field_errors"][0], response.json()
         )
