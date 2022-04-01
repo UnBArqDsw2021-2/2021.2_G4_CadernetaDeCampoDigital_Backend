@@ -10,8 +10,8 @@ from agrotoxico.models import TipoAgrotoxico
 from agrotoxico.tests.recipes import tipo_agrotoxico as tipo_agrotoxico_recipe
 
 
-class TipoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
-    url = reverse_lazy("tipo-agrotoxico-create")
+class TipoAgrotoxicoCreateAPIViewTest(APITestMixin, TestCase):
+    url = reverse_lazy("tipo-agrotoxico-list-create")
 
     def _payload(self):
         return {
@@ -57,3 +57,24 @@ class TipoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
         response = self.client.post(self.url, data=payload, format="json")
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(msg, response.json()["nome"])
+
+
+class TipoAgrotoxicoListAPIViewTest(APITestMixin, TestCase):
+    url = reverse_lazy("tipo-agrotoxico-list-create")
+
+    def test_lista_agrotoxico(self):
+        tipo_agrotoxico_recipe.make(_quantity=10)
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(10, len(response.json()))
+
+    def test_lista_agrotoxico_estrutura(self):
+        tipo_agrotoxico = tipo_agrotoxico_recipe.make()
+
+        response = self.client.get(self.url)
+        data = response.json()[0]
+
+        self.assertEqual(str(tipo_agrotoxico.idTipoAgrotoxico), data["idTipoAgrotoxico"])
+        self.assertEqual(tipo_agrotoxico.nome, data["nome"])
