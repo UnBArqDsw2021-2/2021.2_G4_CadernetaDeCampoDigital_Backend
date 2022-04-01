@@ -6,15 +6,15 @@ from rest_framework.reverse import reverse_lazy
 
 from parameterized import parameterized
 
-from agrotoxico.models import Espera
+from cultura.models import Espera
 
-from cultura.tests.recipes import cultura as cultura_recipe
-from agrotoxico.tests.recipes import agrotoxico as agrotoxico_recipe, espera as espera_recipe
+from cultura.tests.recipes import cultura as cultura_recipe, espera as espera_recipe
+from agrotoxico.tests.recipes import agrotoxico as agrotoxico_recipe
 
 
 class EsperaAPIViewTest(APITestMixin, TestCase):
 
-    url = reverse_lazy('agrotoxico-espera-cultura')
+    url = reverse_lazy('cultura-espera-agrotoxico')
 
     def setUp(self):
         self.cultura = cultura_recipe.make()
