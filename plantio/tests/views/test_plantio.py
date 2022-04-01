@@ -83,33 +83,3 @@ class PlantioAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             'Data de plantio no futuro.', response.json()['dataPlantio'])
-
-
-class PlantioHistoricoPropriedadeAPIView(APITestMixin, TestCase):
-
-    def setUp(self):
-        self.propriedade = propriedade.make()
-        self.url = reverse_lazy(
-            "plantio-historico-propriedade", kwargs={'idPropriedade': self.propriedade.idPropriedade})
-        self.talhoes = talhao.make(idPropriedade=self.propriedade, _quantity=3)
-        talhao.make(idPropriedade=self.propriedade, _quantity=2)
-        for t in self.talhoes:
-            plantio.make(talhao=t)
-
-    def test_lista_plantios_do_talhao(self):
-        response = self.client.get(self.url)
-        self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(len(response.json()), 3)
-
-    def test_nao_lista_plantio_de_outra_propriedade(self):
-        url = reverse_lazy(
-            "plantio-historico-propriedade", kwargs={'idPropriedade': self.propriedade.idPropriedade})
-        propriedade_diferente = propriedade.make()
-        talhoes = talhao.make(idPropriedade=propriedade_diferente, _quantity=3)
-        for t in talhoes:
-            plantio.make(talhao=t)
-
-        response = self.client.get(url)
-        self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(Plantio.objects.count(), 6)
-        self.assertEqual(len(response.json()), 3)
