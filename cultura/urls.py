@@ -8,6 +8,6 @@ from cultura.views.espera import CulturaEsperaAgrotoxicoAPIView
 urlpatterns = [
     url(r'^cultura/', include([
         url(r'^$', CulturaAPIView.as_view(), name='cultura-create'),
-        url(f'^espera/agrotoxico/$', CulturaEsperaAgrotoxicoAPIView.as_view(), name='cultura-espera-agrotoxico')
+        url(r'^espera/agrotoxico/$', CulturaEsperaAgrotoxicoAPIView.as_view(), name='cultura-espera-agrotoxico')
     ]))
 ]
