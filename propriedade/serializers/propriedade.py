@@ -5,8 +5,12 @@ from propriedade.models import Propriedade
 from rest_framework import serializers
 
 from produtor.models.produtor import Produtor
+from produtor.serializers.produtor import ProdutorSerializer
 
 from tecnico.models.tecnico import Tecnico
+from tecnico.serializers.tecnico import TecnicoSerializer
+
+from talhao.serializers.talhao import TalhaoSerializer
 
 
 class PropriedadeSerializer(serializers.ModelSerializer):
@@ -40,3 +44,13 @@ class PropriedadeSerializer(serializers.ModelSerializer):
             return tecnico
         except Tecnico.DoesNotExist:
             raise serializers.ValidationError('Técnico não existe.')
+
+
+class PropriedadeDetailSerializer(PropriedadeSerializer):
+    talhao = TalhaoSerializer(many=True, read_only=True, source='talhao_set')
+    produtor = ProdutorSerializer()
+    tecnico = TecnicoSerializer()
+
+    class Meta(PropriedadeSerializer.Meta):
+        fields = PropriedadeSerializer.Meta.fields + ('talhao',)
+        read_only_fields = fields

@@ -1,13 +1,17 @@
 from core.consts.usuarios import TECNICO
 
 from propriedade.models import Propriedade
-from propriedade.serializers.propriedade import PropriedadeSerializer
+from propriedade.serializers.propriedade import PropriedadeSerializer, PropriedadeDetailSerializer
 
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
 
 
 class PropriedadeAPIView(ListCreateAPIView):
-    serializer_class = PropriedadeSerializer
+
+    def get_serializer_class(self):
+        if self.request.method.lower() == 'get':
+            return PropriedadeDetailSerializer
+        return PropriedadeSerializer
 
     def get_queryset(self):
         if self.request.user.is_anonymous:
@@ -19,7 +23,7 @@ class PropriedadeAPIView(ListCreateAPIView):
 
 
 class PropriedadeRetrieveAPIViewTest(RetrieveAPIView):
-    serializer_class = PropriedadeSerializer
+    serializer_class = PropriedadeDetailSerializer
 
     def get_queryset(self):
         return Propriedade.objects.all()
