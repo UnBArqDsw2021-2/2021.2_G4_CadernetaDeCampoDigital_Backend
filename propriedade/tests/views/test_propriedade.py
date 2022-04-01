@@ -13,6 +13,8 @@ from produtor.tests.recipes import produtor
 
 from tecnico.tests.recipes import tecnico
 
+from talhao.tests.recipes import talhao
+
 
 class PropriedadeAPIViewTest(APITestMixin, TestCase):
     url = reverse_lazy("propriedade-create-list")
@@ -137,9 +139,9 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
 class PropriedadeRetrieveAPIViewTest(APITestMixin, TestCase):
 
     def setUp(self):
-        self.produtor = produtor.make(usuario__cpf='66326787009')
-        self.tecnico = tecnico.make(usuario__cpf='42205106058')
-        self.propriedade = propriedade.make(produtor=self.produtor, tecnico=self.tecnico)
+        self.propriedade = propriedade.make()
+        self.talhoes = talhao.make(idPropriedade=self.propriedade, _quantity=3)
+
         self.url = reverse_lazy(
             "propriedade-detail",
             kwargs={'pk': self.propriedade.idPropriedade}
@@ -148,7 +150,7 @@ class PropriedadeRetrieveAPIViewTest(APITestMixin, TestCase):
     def test_detalha_propriedade_existente(self):
         response = self.client.get(self.url, format="json")
         self.assertEqual(response.status_code, 200, response.json())
-        self.assertEqual(11, len(response.json()))
+        self.assertEqual(12, len(response.json()))
 
         self.assertEqual(str(self.propriedade.cep), response.json()["cep"])
         self.assertEqual(self.propriedade.estado, response.json()["estado"])
