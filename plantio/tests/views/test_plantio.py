@@ -11,10 +11,7 @@ from rest_framework.reverse import reverse_lazy
 
 from parameterized import parameterized
 
-from propriedade.tests.recipes import propriedade
-
 from plantio.models import Plantio
-from plantio.tests.recipes import plantio
 
 from talhao.tests.recipes import talhao
 

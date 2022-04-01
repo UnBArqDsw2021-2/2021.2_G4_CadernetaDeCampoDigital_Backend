@@ -12,7 +12,8 @@ urlpatterns = [
 
         url(
             r'(?P<idPropriedade>{})/historico/plantio/$'.format(UUID4_URL),
-                PropriedadeHistoricoPlantioAPIView.as_view(),
-                name='propriedade-historico-plantio'),
+            PropriedadeHistoricoPlantioAPIView.as_view(),
+            name='propriedade-historico-plantio'
+        ),
     ]))
 ]

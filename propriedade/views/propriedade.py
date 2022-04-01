@@ -15,6 +15,7 @@ class PropriedadeAPIView(CreateAPIView):
     def get_queryset(self):
         return Propriedade.objects.all()
 
+
 class PropriedadeHistoricoPlantioAPIView(ListAPIView):
     serializer_class = PlantioSerializer
     lookup_field = 'idPropriedade'
