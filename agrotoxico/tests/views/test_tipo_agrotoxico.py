@@ -7,7 +7,7 @@ from rest_framework.reverse import reverse_lazy
 from parameterized import parameterized
 
 from agrotoxico.models import TipoAgrotoxico
-from agrotoxico.tests.recipes import tipo_agrotoxico as ta
+from agrotoxico.tests.recipes import tipo_agrotoxico as tipo_agrotoxico_recipe
 
 
 class TipoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
@@ -39,7 +39,7 @@ class TipoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
 
     def test_nao_cria_tipo_agrotoxico_nome_nao_unico(self):
         payload = self._payload()
-        ta.make(nome=payload['nome'])
+        tipo_agrotoxico_recipe.make(nome=payload['nome'])
 
         response = self.client.post(self.url, data=payload, format="json")
         self.assertEqual(response.status_code, 400, response.json())

@@ -7,7 +7,7 @@ from agrotoxico.views.agrotoxico import AgrotoxicoAPIView
 
 urlpatterns = [
     url(r'^agrotoxico/', include([
-        url(r'^$', AgrotoxicoAPIView.as_view(), name='agrotoxico-create'),
+        url(r'^$', AgrotoxicoAPIView.as_view(), name='agrotoxico-list-create'),
         url(r'^tipo/$', TipoAgrotoxicoAPIView.as_view(), name='tipo-agrotoxico-create'),
     ]))
 ]

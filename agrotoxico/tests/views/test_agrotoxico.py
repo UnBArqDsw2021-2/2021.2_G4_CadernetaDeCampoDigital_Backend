@@ -7,14 +7,14 @@ from rest_framework.reverse import reverse_lazy
 from parameterized import parameterized
 
 from agrotoxico.models import Agrotoxico
-from agrotoxico.tests.recipes import tipo_agrotoxico as ta
+from agrotoxico.tests.recipes import tipo_agrotoxico as tipo_agrotoxico_recipe, agrotoxico as agrotoxico_recipe
 
 
-class AgrotoxicoAPIViewTest(APITestMixin, TestCase):
-    url = reverse_lazy("agrotoxico-create")
+class AgrotoxicoCreateAPIViewTest(APITestMixin, TestCase):
+    url = reverse_lazy("agrotoxico-list-create")
 
     def setUp(self):
-        self.tipo_agrotoxico = ta.make()
+        self.tipo_agrotoxico = tipo_agrotoxico_recipe.make()
 
     def _payload(self):
         return {
@@ -65,3 +65,27 @@ class AgrotoxicoAPIViewTest(APITestMixin, TestCase):
         response = self.client.post(self.url, data=payload, format="json")
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(msg, response.json()["nome"])
+
+
+class AgrotoxicoListAPIViewTest(APITestMixin, TestCase):
+    url = reverse_lazy("agrotoxico-list-create")
+
+    def test_lista_agrotoxico(self):
+        agrotoxico_recipe.make(_quantity=10)
+
+        response = self.client.get(self.url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(10, len(response.json()))
+
+    def test_lista_agrotoxico_estrutura(self):
+        agrotoxico = agrotoxico_recipe.make()
+        tipo_agrotoxico = agrotoxico.tipo
+
+        response = self.client.get(self.url)
+        data = response.json()[0]
+
+        self.assertEqual(str(agrotoxico.idAgrotoxico), data["idAgrotoxico"])
+        self.assertEqual(agrotoxico.nome, data["nome"])
+        self.assertEqual(str(tipo_agrotoxico.idTipoAgrotoxico), data["tipo"]["idTipoAgrotoxico"])
+        self.assertEqual(tipo_agrotoxico.nome, data["tipo"]["nome"])
