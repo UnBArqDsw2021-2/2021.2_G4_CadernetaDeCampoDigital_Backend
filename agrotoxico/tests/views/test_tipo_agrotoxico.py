@@ -21,7 +21,7 @@ class TipoAgrotoxicoListCreateAPIViewTest(APITestMixin, TestCase):
     def test_cria_tipo_agrotoxico(self):
         payload = self._payload()
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 201, response.json())
         self.assertEqual(TipoAgrotoxico.objects.count(), 1)
 
@@ -33,7 +33,7 @@ class TipoAgrotoxicoListCreateAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         del payload[campo]
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn('Este campo é obrigatório.', response.json()[campo])
 
@@ -41,7 +41,7 @@ class TipoAgrotoxicoListCreateAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         tipo_agrotoxico_recipe.make(nome=payload['nome'])
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             'Esse campo deve ser  único.', response.json()['nome'])
@@ -54,7 +54,7 @@ class TipoAgrotoxicoListCreateAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         payload['nome'] = nome
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(msg, response.json()["nome"])
 

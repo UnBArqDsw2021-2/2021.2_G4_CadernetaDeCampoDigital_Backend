@@ -23,7 +23,7 @@ class TecnicoAPIViewTest(UsuarioApiViewBase, APITestMixin, TestCase):
     def test_cria_tecnico(self):
         payload = self._payload()
 
-        response = self.client.post(self.url, payload, format='json')
+        response = self.client.post(self.url, payload)
 
         self.assertEqual(response.status_code, 201, response.json())
 
@@ -42,7 +42,7 @@ class TecnicoAPIViewTest(UsuarioApiViewBase, APITestMixin, TestCase):
         payload = self._payload()
         tecnico_recipe.make(crea=payload['crea'])
 
-        response = self.client.post(self.url, payload, format='json')
+        response = self.client.post(self.url, payload)
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn('Técnico já cadastrado.', response.json()['crea'])
@@ -56,7 +56,7 @@ class TecnicoAPIViewTest(UsuarioApiViewBase, APITestMixin, TestCase):
         payload = self._payload()
         payload['crea'] = crea
 
-        response = self.client.post(self.url, payload, format='json')
+        response = self.client.post(self.url, payload)
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn('Crea deve possuir 10 digitos.', response.json()['crea'])

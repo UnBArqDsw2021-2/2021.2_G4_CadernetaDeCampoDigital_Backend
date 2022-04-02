@@ -44,7 +44,7 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
     def test_cria_propriedade(self):
         payload = self._payload()
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 201, response.json())
         self.assertEqual(Propriedade.objects.count(), 1)
 
@@ -68,7 +68,7 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         del payload[campo]
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn('Este campo é obrigatório.', response.json()[campo])
@@ -78,7 +78,7 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         payload[campo] = "16175696077"
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(f'{msg} não existe.', response.json()[campo])
@@ -87,7 +87,7 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         payload['estado'] = "inexistente"
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
@@ -99,7 +99,7 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         payload['numeroCasa'] = -1
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
@@ -111,7 +111,7 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         payload['hectares'] = Decimal('-0.1')
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
@@ -123,7 +123,7 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         payload['cep'] = "123456789"
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(

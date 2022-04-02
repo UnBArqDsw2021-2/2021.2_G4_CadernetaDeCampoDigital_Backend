@@ -25,7 +25,7 @@ class AgrotoxicoListCreateAPIViewTest(APITestMixin, TestCase):
     def test_cria_agrotoxico(self):
         payload = self._payload()
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 201, response.json())
         self.assertEqual(Agrotoxico.objects.count(), 1)
 
@@ -38,7 +38,7 @@ class AgrotoxicoListCreateAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         del payload[campo]
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn('Este campo é obrigatório.', response.json()[campo])
 
@@ -47,7 +47,7 @@ class AgrotoxicoListCreateAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         payload[campo] = '00000000-0000-0000-0000-000000000000'
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             f"Pk inválido \"{payload[campo]}\" - objeto não existe.",
@@ -62,7 +62,7 @@ class AgrotoxicoListCreateAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         payload['nome'] = nome
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(msg, response.json()["nome"])
 

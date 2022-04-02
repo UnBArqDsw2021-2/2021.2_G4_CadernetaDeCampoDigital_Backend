@@ -23,7 +23,7 @@ class TalhaoAPIViewTest(APITestMixin, TestCase):
         }
 
     def test_cria_talhao(self):
-        response = self.client.post(self.url, data=self._payload(), format="json")
+        response = self.client.post(self.url, data=self._payload())
 
         self.assertEqual(response.status_code, 201, response.json())
         self.assertEqual(Talhao.objects.count(), 1)
@@ -37,7 +37,7 @@ class TalhaoAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         del payload[campo]
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn('Este campo é obrigatório.', response.json()[campo])
@@ -46,7 +46,7 @@ class TalhaoAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         talhao.make(idPropriedade=self.propriedade, numero=payload['numero'])
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
@@ -58,7 +58,7 @@ class TalhaoAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         payload["idPropriedade"] = '00000000-0000-0000-0000-000000000000'
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
@@ -70,7 +70,7 @@ class TalhaoAPIViewTest(APITestMixin, TestCase):
         payload = self._payload()
         payload['numero'] = -1
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
 
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
