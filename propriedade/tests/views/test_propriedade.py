@@ -1,3 +1,5 @@
+from core.consts.plantios import PLANTIO_CHOICES
+
 from decimal import Decimal
 
 from django.test import TestCase
@@ -5,6 +7,8 @@ from core.tests.mixin import APITestMixin
 from rest_framework.reverse import reverse_lazy
 
 from parameterized import parameterized
+
+from plantio.tests.recipes import plantio
 
 from propriedade.models import Propriedade
 from propriedade.tests.recipes import propriedade
@@ -63,7 +67,9 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
     def test_nao_cria_propriedade_atributos_obrigatorios(self, campo):
         payload = self._payload()
         del payload[campo]
+
         response = self.client.post(self.url, data=payload, format="json")
+
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn('Este campo é obrigatório.', response.json()[campo])
 
@@ -71,14 +77,18 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
     def test_nao_cria_propriedade_usuario_inexistente(self, campo, msg):
         payload = self._payload()
         payload[campo] = "16175696077"
+
         response = self.client.post(self.url, data=payload, format="json")
+
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(f'{msg} não existe.', response.json()[campo])
 
     def test_nao_cria_propriedade_estado_inexistente(self):
         payload = self._payload()
         payload['estado'] = "inexistente"
+
         response = self.client.post(self.url, data=payload, format="json")
+
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             f'''"{payload['estado']}" não é um escolha válido.''',
@@ -88,7 +98,9 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
     def test_nao_cria_propriedade_numeroCasa_negativo(self):
         payload = self._payload()
         payload['numeroCasa'] = -1
+
         response = self.client.post(self.url, data=payload, format="json")
+
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             'Certifque-se de que este valor seja maior ou igual a 0.',
@@ -98,7 +110,9 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
     def test_nao_cria_propriedade_hectares_negativo(self):
         payload = self._payload()
         payload['hectares'] = Decimal('-0.1')
+
         response = self.client.post(self.url, data=payload, format="json")
+
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             'Certifque-se de que este valor seja maior ou igual a 0.01.',
@@ -108,7 +122,9 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
     def test_nao_cria_propriedade_cep_invalido(self):
         payload = self._payload()
         payload['cep'] = "123456789"
+
         response = self.client.post(self.url, data=payload, format="json")
+
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             'CEP deve possuir 8 digítos numéricos.',
@@ -122,6 +138,7 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
         propriedade.make(produtor=produtor.make(), tecnico=self.tecnico)
 
         response = self.client.get(self.url, format="json")
+
         self.assertEqual(response.status_code, 200, response.json())
         self.assertEqual(1, len(response.json()))
 
@@ -132,6 +149,7 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
         propriedade.make(produtor=self.produtor, tecnico=tecnico.make())
 
         response = self.client.get(self.url, format="json")
+
         self.assertEqual(response.status_code, 200, response.json())
         self.assertEqual(1, len(response.json()))
 
@@ -141,6 +159,7 @@ class PropriedadeRetrieveAPIViewTest(APITestMixin, TestCase):
     def setUp(self):
         self.propriedade = propriedade.make()
         self.talhoes = talhao.make(idPropriedade=self.propriedade, _quantity=3)
+        plantio.make(talhao=self.talhoes[0], estado=PLANTIO_CHOICES[0][0], _quantity=2)
 
         self.url = reverse_lazy(
             "propriedade-detail",
@@ -149,9 +168,13 @@ class PropriedadeRetrieveAPIViewTest(APITestMixin, TestCase):
 
     def test_detalha_propriedade_existente(self):
         response = self.client.get(self.url, format="json")
+        qtd_talhao = len(response.json()['talhao'])
+        qtd_plantio_primeiro_talhao = len(response.json()['talhao'][0]['plantio'])
+
         self.assertEqual(response.status_code, 200, response.json())
         self.assertEqual(12, len(response.json()))
-
+        self.assertEqual(3, qtd_talhao)
+        self.assertEqual(2, qtd_plantio_primeiro_talhao)
         self.assertEqual(str(self.propriedade.cep), response.json()["cep"])
         self.assertEqual(self.propriedade.estado, response.json()["estado"])
         self.assertEqual(self.propriedade.cidade, response.json()["cidade"])
@@ -161,6 +184,26 @@ class PropriedadeRetrieveAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(self.propriedade.hectares, response.json()["hectares"])
         self.assertEqual(self.propriedade.logradouro, response.json()["logradouro"])
 
+    def test_detalha_apenas_propriedade_encontrada(self):
+        propriedade_diferente = propriedade.make()
+        talhao.make(idPropriedade=propriedade_diferente, _quantity=10)
+
+        response = self.client.get(self.url, format="json")
+        qtd_talhao = len(response.json()['talhao'])
+
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(12, len(response.json()))
+        self.assertEqual(3, qtd_talhao)
+
+    def test_nao_detalha_plantios_nao_ativos(self):
+        plantio_finalizado = PLANTIO_CHOICES[3][0]
+        plantio.make(talhao=self.talhoes[0], estado=plantio_finalizado, _quantity=5)
+
+        response = self.client.get(self.url, format="json")
+        qtd_plantio_primeiro_talhao = len(response.json()['talhao'][0]['plantio'])
+
+        self.assertEqual(2, qtd_plantio_primeiro_talhao)
+
     def test_nao_detalha_propriedade_inexistente(self):
         url = reverse_lazy(
             "propriedade-detail",
@@ -168,5 +211,6 @@ class PropriedadeRetrieveAPIViewTest(APITestMixin, TestCase):
         )
 
         response = self.client.get(url, format="json")
+
         self.assertEqual(response.status_code, 404, response.json())
         self.assertIn('Não encontrado.', response.json()['detail'])
