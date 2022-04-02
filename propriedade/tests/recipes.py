@@ -8,4 +8,4 @@ from tecnico.tests.recipes import tecnico
 
 
 propriedade = Recipe(
-    Propriedade, produtor=foreign_key(produtor), tecnico=foreign_key(tecnico))
+    Propriedade, produtor=foreign_key(produtor), tecnico=foreign_key(tecnico), cep=12345678)

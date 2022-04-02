@@ -1,6 +1,10 @@
+PLANTADO = 'Plantado'
+CARENCIA = 'Carencia'
+COLHEITA = 'Colheita'
+FINALIZADO = 'Finalizado'
 PLANTIO_CHOICES = [
-    ('Plantado', 'Plantado'),
-    ('Carencia', 'Carencia'),
-    ('Colheita', 'Colheita'),
-    ('Finalizado', 'Finalizado')
+    (PLANTADO, 'Plantado'),
+    (CARENCIA, 'Carencia'),
+    (COLHEITA, 'Colheita'),
+    (FINALIZADO, 'Finalizado')
 ]
