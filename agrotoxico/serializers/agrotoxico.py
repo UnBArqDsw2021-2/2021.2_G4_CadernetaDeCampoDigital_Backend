@@ -17,9 +17,8 @@ class AgrotoxicoCreateSerializer(serializers.ModelSerializer):
         read_only_fields = ('idAgrotoxico',)
 
 
-class AgrotoxicoListSerializer(serializers.ModelSerializer):
+class AgrotoxicoListSerializer(AgrotoxicoCreateSerializer):
     tipo = TipoAgrotoxicoSerializer()
 
-    class Meta:
-        model = Agrotoxico
-        fields = ('idAgrotoxico', 'nome', 'tipo')
+    class Meta(AgrotoxicoCreateSerializer.Meta):
+        read_only_fields = AgrotoxicoCreateSerializer.Meta.fields
