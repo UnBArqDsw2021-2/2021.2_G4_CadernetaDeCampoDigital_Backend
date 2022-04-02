@@ -1,4 +1,5 @@
-from usuario.models import Usuario
+from core.consts.usuarios import PRODUTOR
+
 from usuario.tests import recipes
 
 from rest_framework.test import APIClient
@@ -14,12 +15,12 @@ class APITestMixin:
     # possível alterar esses atributos
     nome = 'Nome para Teste'
     cpf = '03700076037'
-    tipo = Usuario.PRODUTOR
+    tipo = PRODUTOR
     password = '12345678'
     usuario_kwargs = {}
 
-    def get_header_credencial(self):
-        token = RefreshToken.for_user(self.user)
+    def get_header_credencial(self, user=None):
+        token = RefreshToken.for_user(self.user if not user else user)
         return str(token.access_token)
 
     def get_client(self):

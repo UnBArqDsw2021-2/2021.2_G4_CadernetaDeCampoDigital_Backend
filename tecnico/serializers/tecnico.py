@@ -1,3 +1,5 @@
+from core.consts.usuarios import TECNICO
+
 from rest_framework.validators import UniqueValidator
 
 from tecnico.models import Tecnico
@@ -22,7 +24,7 @@ class TecnicoSerializer(UsuarioSerializer):
         usuario = Usuario.objects.create_user(
             usuario_data['cpf'],
             password=password,
-            tipo=Usuario.TECNICO,
+            tipo=TECNICO,
             **usuario_data
 
         )

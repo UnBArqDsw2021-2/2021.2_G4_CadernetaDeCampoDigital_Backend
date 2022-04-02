@@ -1,3 +1,5 @@
+from core.consts.usuarios import PRODUTOR
+
 from usuario.serializers.usuario import UsuarioSerializer
 from core.serializers.fields import DAPField
 
@@ -22,7 +24,7 @@ class ProdutorSerializer(UsuarioSerializer):
         usuario = Usuario.objects.create_user(
             usuario_data['cpf'],
             password=password,
-            tipo=Usuario.PRODUTOR,
+            tipo=PRODUTOR,
             **usuario_data
 
         )
