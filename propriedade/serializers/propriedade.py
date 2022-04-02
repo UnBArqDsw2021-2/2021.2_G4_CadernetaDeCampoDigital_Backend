@@ -1,4 +1,5 @@
 from core.serializers.fields import CEPField, CPFField
+from core.consts.plantios import PLANTIO_CHOICES
 
 from propriedade.models import Propriedade
 
@@ -10,7 +11,7 @@ from produtor.serializers.produtor import ProdutorSerializer
 from tecnico.models.tecnico import Tecnico
 from tecnico.serializers.tecnico import TecnicoSerializer
 
-from talhao.serializers.talhao import TalhaoSerializer
+from talhao.serializers.talhao import TalhaoListSerializer
 
 
 class PropriedadeSerializer(serializers.ModelSerializer):
@@ -47,10 +48,17 @@ class PropriedadeSerializer(serializers.ModelSerializer):
 
 
 class PropriedadeDetailSerializer(PropriedadeSerializer):
-    talhao = TalhaoSerializer(many=True, read_only=True, source='talhao_set')
+    talhao = serializers.SerializerMethodField()
     produtor = ProdutorSerializer()
     tecnico = TecnicoSerializer()
 
     class Meta(PropriedadeSerializer.Meta):
         fields = PropriedadeSerializer.Meta.fields + ('talhao',)
         read_only_fields = fields
+
+    def get_talhao(self, propriedade):
+        return TalhaoListSerializer(
+            propriedade.talhao_set,
+            context=[PLANTIO_CHOICES[0][0], PLANTIO_CHOICES[1][0], PLANTIO_CHOICES[2][0]],
+            many=True
+        ).data
