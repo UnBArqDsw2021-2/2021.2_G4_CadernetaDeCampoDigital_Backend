@@ -22,7 +22,7 @@ class PropriedadeAPIView(ListCreateAPIView):
         return Propriedade.objects.filter(produtor=self.request.user.produtor)
 
 
-class PropriedadeRetrieveAPIViewTest(RetrieveAPIView):
+class PropriedadeRetrieveAPIView(RetrieveAPIView):
     serializer_class = PropriedadeDetailSerializer
 
     def get_queryset(self):

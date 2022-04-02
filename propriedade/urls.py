@@ -1,12 +1,18 @@
+from core.consts.urls import UUID4_URL
+
 from django.conf.urls import url
 from django.urls import include
 
-from propriedade.views.propriedade import PropriedadeAPIView, PropriedadeRetrieveAPIViewTest
+from propriedade.views.propriedade import PropriedadeAPIView, PropriedadeRetrieveAPIView
 
 
 urlpatterns = [
     url(r'^propriedade/', include([
         url(r'^$', PropriedadeAPIView.as_view(), name='propriedade-create-list'),
-        url(r'^(?P<pk>[0-9A-Za-z]{8}-[0-9A-Za-z]{4}-4[0-9A-Za-z]{3}-[89ABab][0-9A-Za-z]{3}-[0-9A-Za-z]{12})/$', PropriedadeRetrieveAPIViewTest.as_view(), name='propriedade-detail'),
+        url(
+            r'^(?P<pk>{})/$'.format(UUID4_URL),
+            PropriedadeRetrieveAPIView.as_view(),
+            name='propriedade-detail'
+        ),
     ]))
 ]
