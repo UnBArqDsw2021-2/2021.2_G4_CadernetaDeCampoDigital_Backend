@@ -29,8 +29,9 @@ class TalhaoListSerializer(serializers.ModelSerializer):
 
     def get_plantio(self, talhao):
         if bool(self.context):
+            [estados] = [*self.context.values()]
             plantios = talhao.plantio_set.filter(
-                estado__in=self.context
+                estado__in=estados
             )
         else:
             plantios = talhao.plantio_set.all()

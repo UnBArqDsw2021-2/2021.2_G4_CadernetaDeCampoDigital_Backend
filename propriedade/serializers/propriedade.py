@@ -1,5 +1,5 @@
 from core.serializers.fields import CEPField, CPFField
-from core.consts.plantios import PLANTIO_CHOICES
+from core.consts.plantios import PLANTADO, CARENCIA, COLHEITA
 
 from propriedade.models import Propriedade
 
@@ -59,6 +59,6 @@ class PropriedadeDetailSerializer(PropriedadeSerializer):
     def get_talhao(self, propriedade):
         return TalhaoListSerializer(
             propriedade.talhao_set,
-            context=[PLANTIO_CHOICES[0][0], PLANTIO_CHOICES[1][0], PLANTIO_CHOICES[2][0]],
+            context={'plantio_estado_filtro': [PLANTADO, CARENCIA, COLHEITA]},
             many=True
         ).data

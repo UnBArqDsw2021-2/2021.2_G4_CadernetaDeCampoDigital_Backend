@@ -1,4 +1,4 @@
-from core.consts.plantios import PLANTIO_CHOICES
+from core.consts.plantios import PLANTADO, FINALIZADO
 
 from decimal import Decimal
 
@@ -159,12 +159,14 @@ class PropriedadeRetrieveAPIViewTest(APITestMixin, TestCase):
     def setUp(self):
         self.propriedade = propriedade.make()
         self.talhoes = talhao.make(idPropriedade=self.propriedade, _quantity=3)
-        plantio.make(talhao=self.talhoes[0], estado=PLANTIO_CHOICES[0][0], _quantity=2)
+        plantio.make(talhao=self.talhoes[0], estado=PLANTADO, _quantity=2)
 
-        self.url = reverse_lazy(
-            "propriedade-detail",
-            kwargs={'pk': self.propriedade.idPropriedade}
-        )
+        self.url = self.get_url()
+
+    def get_url(self, idPropriedade=None):
+        if idPropriedade is None:
+            idPropriedade = self.propriedade.idPropriedade
+        return reverse_lazy("propriedade-detail", kwargs={'pk': idPropriedade})
 
     def test_detalha_propriedade_existente(self):
         response = self.client.get(self.url, format="json")
@@ -196,8 +198,7 @@ class PropriedadeRetrieveAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(3, qtd_talhao)
 
     def test_nao_detalha_plantios_nao_ativos(self):
-        plantio_finalizado = PLANTIO_CHOICES[3][0]
-        plantio.make(talhao=self.talhoes[0], estado=plantio_finalizado, _quantity=5)
+        plantio.make(talhao=self.talhoes[0], estado=FINALIZADO, _quantity=5)
 
         response = self.client.get(self.url, format="json")
         qtd_plantio_primeiro_talhao = len(response.json()['talhao'][0]['plantio'])
@@ -205,10 +206,7 @@ class PropriedadeRetrieveAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(2, qtd_plantio_primeiro_talhao)
 
     def test_nao_detalha_propriedade_inexistente(self):
-        url = reverse_lazy(
-            "propriedade-detail",
-            kwargs={'pk': '00000000-0000-4000-8000-000000000000'}
-        )
+        url = self.get_url('00000000-0000-4000-8000-000000000000')
 
         response = self.client.get(url, format="json")
 
