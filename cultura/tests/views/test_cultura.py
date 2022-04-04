@@ -21,7 +21,7 @@ class CulturaAPIViewTest(APITestMixin, TestCase):
     def test_cria_cultura(self):
         payload = self._payload()
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 201, response.json())
         self.assertEqual(Cultura.objects.count(), 1)
 
@@ -32,14 +32,14 @@ class CulturaAPIViewTest(APITestMixin, TestCase):
     def test_nao_cria_cultura_atributos_obrigatorios(self, campo):
         payload = self._payload()
         del payload[campo]
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn('Este campo é obrigatório.', response.json()[campo])
 
     def test_nao_cria_cultura_nome_nao_unico(self):
         payload = self._payload()
         c.make(nome=payload['nome'])
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             'Esse campo deve ser  único.', response.json()['nome'])

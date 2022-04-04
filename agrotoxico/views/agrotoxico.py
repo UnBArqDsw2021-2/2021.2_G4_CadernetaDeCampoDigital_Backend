@@ -1,7 +1,13 @@
-from agrotoxico.serializers.agrotoxico import AgrotoxicoSerializer
+from agrotoxico.models import Agrotoxico
+from agrotoxico.serializers.agrotoxico import AgrotoxicoCreateSerializer, AgrotoxicoListSerializer
 
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import ListCreateAPIView
 
 
-class AgrotoxicoAPIView(CreateAPIView):
-    serializer_class = AgrotoxicoSerializer
+class AgrotoxicoAPIView(ListCreateAPIView):
+    queryset = Agrotoxico.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method.lower() == "get":
+            return AgrotoxicoListSerializer
+        return AgrotoxicoCreateSerializer

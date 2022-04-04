@@ -34,7 +34,7 @@ class PlantioAPIViewTest(APITestMixin, TestCase):
     def test_cria_plantio(self):
         payload = self._payload()
 
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 201, response.json())
         self.assertEqual(Plantio.objects.count(), 1)
 
@@ -48,7 +48,7 @@ class PlantioAPIViewTest(APITestMixin, TestCase):
     def test_nao_cria_plantio_atributos_obrigatorios(self, campo):
         payload = self._payload()
         del payload[campo]
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn('Este campo é obrigatório.', response.json()[campo])
 
@@ -56,7 +56,7 @@ class PlantioAPIViewTest(APITestMixin, TestCase):
     def test_nao_cria_plantio_objeto_inexistente(self, campo, msg):
         payload = self._payload()
         payload[campo] = '00000000-0000-0000-0000-000000000000'
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             f"Pk inválido \"{payload[campo]}\" - objeto não existe.",
@@ -66,7 +66,7 @@ class PlantioAPIViewTest(APITestMixin, TestCase):
     def test_nao_cria_plantio_estado_inexistente(self):
         payload = self._payload()
         payload['estado'] = "inexistente"
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             f'''"{payload['estado']}" não é um escolha válido.''',
@@ -76,7 +76,7 @@ class PlantioAPIViewTest(APITestMixin, TestCase):
     def test_nao_cria_plantio_data_no_futuro(self):
         payload = self._payload()
         payload['dataPlantio'] = date.today() + timedelta(days=1)
-        response = self.client.post(self.url, data=payload, format="json")
+        response = self.client.post(self.url, data=payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             'Data de plantio no futuro.', response.json()['dataPlantio'])

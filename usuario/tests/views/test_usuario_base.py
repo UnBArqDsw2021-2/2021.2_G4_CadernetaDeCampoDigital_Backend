@@ -1,9 +1,11 @@
 from parameterized import parameterized
 
+from core.tests.mixin import APITestMixin
+
 from usuario.tests.recipes import usuario as usuario_recipe
 
 
-class UsuarioApiViewBase:
+class UsuarioApiViewBase(APITestMixin):
     url = ""
 
     def _payload(self):
@@ -26,7 +28,7 @@ class UsuarioApiViewBase:
         payload = self._payload()
         payload['usuario']['cpf'] = cpf
 
-        response = self.client.post(self.url, payload, format="json")
+        response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(msg, response.json()['usuario']['cpf'])
 
@@ -34,7 +36,7 @@ class UsuarioApiViewBase:
         payload = self._payload()
         payload['usuario']['dataNascimento'] = '11-05-2000'
 
-        response = self.client.post(self.url, payload, format="json")
+        response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             'Formato inválido para data. Use um dos formatos a seguir: YYYY-MM-DD.',
@@ -46,7 +48,7 @@ class UsuarioApiViewBase:
         payload = self._payload()
         payload['usuario']['telefone'] = telefone
 
-        response = self.client.post(self.url, payload, format="json")
+        response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(
             'Este número de telefone não é válido.',
@@ -61,7 +63,7 @@ class UsuarioApiViewBase:
         payload = self._payload()
         payload['usuario']['senha'] = senha
 
-        response = self.client.post(self.url, payload, format="json")
+        response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, 400, response.json())
         self.assertIn(msg, response.json()['usuario']['senha'])
 
@@ -69,6 +71,6 @@ class UsuarioApiViewBase:
         payload = self._payload()
         usuario_recipe.make(cpf=payload['usuario']['cpf'])
 
-        response = self.client.post(self.url, payload, format="json")
+        response = self.client.post(self.url, payload)
         self.assertEqual(response.status_code, 400)
         self.assertIn("Esse campo deve ser  único.", response.json()["usuario"]["cpf"])
