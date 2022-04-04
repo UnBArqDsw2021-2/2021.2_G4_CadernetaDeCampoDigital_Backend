@@ -1,17 +1,16 @@
 from django.conf.urls import url
 from django.urls import include
 
-from plantio.views.plantio import PlantioAPIView
-from plantio.views.aplicacao import AplicacaoAgrotoxicoAPIView
+from plantio.views import plantio, aplicacao
 
 
 urlpatterns = [
     url(r'^plantio/', include([
-        url(r'^$', PlantioAPIView.as_view(), name='plantio-create'),
+        url(r'^$', plantio.PlantioAPIView.as_view(), name='plantio-create'),
 
         url(r'^aplicar/', include([
             url(
-                r'agrotoxico/$', AplicacaoAgrotoxicoAPIView.as_view(),
+                r'agrotoxico/$', aplicacao.AplicacaoAgrotoxicoAPIView.as_view(),
                 name='plantio-associar'),
         ])),
     ]))

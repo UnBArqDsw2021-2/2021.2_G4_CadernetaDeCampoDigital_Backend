@@ -1,9 +1,14 @@
 from core.consts.usuarios import TECNICO
 
+from plantio.models import Plantio
+from plantio.serializers.plantio import PlantioListSerializer
+
 from propriedade.models import Propriedade
 from propriedade.serializers.propriedade import PropriedadeSerializer, PropriedadeDetailSerializer
 
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView
+from talhao.models import Talhao
+
+from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, ListAPIView
 
 
 class PropriedadeAPIView(ListCreateAPIView):
@@ -27,3 +32,12 @@ class PropriedadeRetrieveAPIView(RetrieveAPIView):
 
     def get_queryset(self):
         return Propriedade.objects.all()
+
+
+class PropriedadeHistoricoPlantioAPIView(ListAPIView):
+    serializer_class = PlantioListSerializer
+    lookup_field = 'idPropriedade'
+
+    def get_queryset(self):
+        return Plantio.objects.filter(
+            talhao__in=Talhao.objects.filter(**self.kwargs).values_list('idTalhao'))
