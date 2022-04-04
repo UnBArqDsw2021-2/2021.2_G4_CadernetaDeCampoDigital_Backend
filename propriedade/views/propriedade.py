@@ -1,7 +1,7 @@
 from core.consts.usuarios import TECNICO
 
 from plantio.models import Plantio
-from plantio.serializers.plantio import PlantioSerializer
+from plantio.serializers.plantio import PlantioListSerializer
 
 from propriedade.models import Propriedade
 from propriedade.serializers.propriedade import PropriedadeSerializer, PropriedadeDetailSerializer
@@ -35,7 +35,7 @@ class PropriedadeRetrieveAPIView(RetrieveAPIView):
 
 
 class PropriedadeHistoricoPlantioAPIView(ListAPIView):
-    serializer_class = PlantioSerializer
+    serializer_class = PlantioListSerializer
     lookup_field = 'idPropriedade'
 
     def get_queryset(self):

@@ -9,12 +9,12 @@ from propriedade.views.propriedade import PropriedadeAPIView, PropriedadeHistori
 urlpatterns = [
     url(r'^propriedade/', include([
         url(r'^$', PropriedadeAPIView.as_view(), name='propriedade-create-list'),
-      
+
         url(
             r'^(?P<pk>{})/$'.format(UUID4_URL),
             PropriedadeRetrieveAPIView.as_view(),
             name='propriedade-detail'),
-      
+
         url(
             r'(?P<idPropriedade>{})/historico/plantio/$'.format(UUID4_URL),
             PropriedadeHistoricoPlantioAPIView.as_view(),

@@ -131,7 +131,7 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
             'CEP deve possuir 8 digítos numéricos.',
             response.json()['cep']
         )
-        
+
     def test_lista_propriedade_de_um_produtor_autenticado(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(self.produtor.usuario))
 
@@ -213,8 +213,8 @@ class PropriedadeRetrieveAPIViewTest(APITestMixin, TestCase):
 
         self.assertEqual(response.status_code, 404, response.json())
         self.assertIn('Não encontrado.', response.json()['detail'])
-        
-        
+
+
 class PropriedadeHistoricoPlantioAPIView(APITestMixin, TestCase):
 
     def setUp(self):
@@ -228,6 +228,7 @@ class PropriedadeHistoricoPlantioAPIView(APITestMixin, TestCase):
 
     def test_lista_plantios_do_talhao(self):
         response = self.client.get(self.url)
+        __import__('ipdb').set_trace()
         self.assertEqual(response.status_code, 200, response.json())
         self.assertEqual(len(response.json()), 3)
 
