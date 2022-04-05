@@ -228,7 +228,6 @@ class PropriedadeHistoricoPlantioAPIView(APITestMixin, TestCase):
 
     def test_lista_plantios_do_talhao(self):
         response = self.client.get(self.url)
-        __import__('ipdb').set_trace()
         self.assertEqual(response.status_code, 200, response.json())
         self.assertEqual(len(response.json()), 3)
 
