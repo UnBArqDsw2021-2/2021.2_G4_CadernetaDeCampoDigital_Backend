@@ -29,8 +29,9 @@ class TalhaoAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(Talhao.objects.count(), 1)
 
         talhao = Talhao.objects.first()
+        self.assertEqual(str(talhao.idTalhao), response.json()['idTalhao'])
         self.assertEqual(talhao.idPropriedade, self.propriedade)
-        self.assertEqual(talhao.numero, 1)
+        self.assertEqual(talhao.numero, response.json()['numero'])
 
     @parameterized.expand(['idPropriedade', 'numero'])
     def test_nao_cria_talhao_atributos_obrigatorios(self, campo):

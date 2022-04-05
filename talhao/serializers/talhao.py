@@ -9,7 +9,7 @@ class TalhaoSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Talhao
-        fields = ('idPropriedade', 'numero')
+        fields = ('idTalhao', 'idPropriedade', 'numero')
         validators = [
             serializers.UniqueTogetherValidator(
                 queryset=Talhao.objects.all(),
@@ -24,7 +24,7 @@ class TalhaoListSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Talhao
-        fields = ('idPropriedade', 'numero', 'plantio')
+        fields = ('idTalhao', 'idPropriedade', 'numero', 'plantio')
         read_only_fields = fields
 
     def get_plantio(self, talhao):
