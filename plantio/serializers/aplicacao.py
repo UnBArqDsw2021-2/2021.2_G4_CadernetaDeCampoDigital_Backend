@@ -13,7 +13,7 @@ class AplicacaoAgrotoxicoSerializer(serializers.ModelSerializer):
         fields = (
             'plantio', 'agrotoxico', 'dataAplicacao', 'dosagemAplicacao', 'fotoAgrotoxico', 'estadoAnalise'
         )
-        read_only = 'estadoAnalise'
+        read_only_fields = ('estadoAnalise',)
         extra_kwargs = {
             'agrotoxico': {'required': False},
             'fotoAgrotoxico': {'required': False}

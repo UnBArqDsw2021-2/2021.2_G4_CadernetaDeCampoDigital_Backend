@@ -1,4 +1,13 @@
+import shutil
+import tempfile
+from io import BytesIO
+from PIL import Image
+
+from django.core.files.base import File
+from django.test import override_settings, TestCase
+
 from functools import partial
+
 from core.consts.usuarios import PRODUTOR
 
 from usuario.tests import recipes
@@ -51,3 +60,22 @@ class APITestMixin:
         )
         self.user.id = self.user.idUsuario
         self.client = self.get_client()
+
+
+MEDIA_ROOT = tempfile.mkdtemp()
+
+
+@override_settings(MEDIA_ROOT=MEDIA_ROOT)
+class APIImageTestMixin(APITestMixin, TestCase):
+
+    @classmethod
+    def tearDownClass(cls):
+        shutil.rmtree(MEDIA_ROOT, ignore_errors=True)
+        super().tearDownClass()
+
+    def get_image_file(self, name='test.png', ext='png', size=(1, 1), color=(255, 0, 0)):
+        file_obj = BytesIO()
+        image = Image.new("RGB", size=size, color=color)
+        image.save(file_obj, ext)
+        file_obj.seek(0)
+        return File(file_obj, name=name)

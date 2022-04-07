@@ -4,11 +4,9 @@ from datetime import date, timedelta
 
 from decimal import Decimal
 
-from django.test import TestCase
 from django.core.files.uploadedfile import SimpleUploadedFile
 
-from core.tests.mixin import APITestMixin
-from core.tests.image import get_image_file
+from core.tests.mixin import APIImageTestMixin
 from core.consts.agrotoxicos import AplicacaoEstados
 
 from rest_framework.reverse import reverse_lazy
@@ -19,13 +17,12 @@ from plantio.models import AplicacaoAgrotoxico
 from plantio.tests import recipes
 
 
-class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
+class AplicacaoAgrotoxicoAPIViewTest(APIImageTestMixin):
     url = reverse_lazy('plantio-associar')
 
     def setUp(self):
         self.plantio = recipes.plantio.make()
         self.agrotoxico = a.make()
-        self.fotoAgrotoxico = get_image_file()
 
     def _payload_agrotoxico(self):
         return {
@@ -37,7 +34,9 @@ class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
 
     def _payload_fotoAgrotoxico(self):
         payload = self._payload_agrotoxico()
-        payload["fotoAgrotoxico"] = self.fotoAgrotoxico
+
+        payload["fotoAgrotoxico"] = self.get_image_file()
+
         del payload["agrotoxico"]
         return payload
 
@@ -76,7 +75,6 @@ class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
         del payload['dosagemAplicacao']
 
         response = self.client.post(self.url, data=payload)
-        breakpoint()
         self.assertEqual(response.status_code, 201, response.json())
         self.assertEqual(AplicacaoAgrotoxico.objects.count(), 1)
 
@@ -138,8 +136,8 @@ class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
         )
 
     def test_nao_cria_aplicao_com_agrotoxico_e_fotoAgrotoxico(self):
-        payload = self._payload_agrotoxico()
-        payload["fotoAgrotoxico"] = self.fotoAgrotoxico
+        payload = self._payload_fotoAgrotoxico()
+        payload["agrotoxico"] = self.agrotoxico.idAgrotoxico
 
         response = self.client.post(self.url, payload, format="multipart")
         self.assertEqual(response.status_code, 400)
