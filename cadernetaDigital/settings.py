@@ -120,7 +120,7 @@ STATIC_URL = config('STATIC_URL', default='/static/')
 
 # Storage
 DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage' if ENV == 'Production' else 'django.core.files.storage.FileSystemStorage'
-AZURE_CONNECTION_STRING = config('AZURE_CONNECTION_STRING')
+AZURE_CONNECTION_STRING = config('AZURE_CONNECTION_STRING', '')
 AZURE_CONTAINER = 'aplicacao'
 MEDIA_ROOT = 'media'
 MEDIA_URL = '/media/'
