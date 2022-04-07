@@ -9,6 +9,7 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 
 from core.tests.mixin import APITestMixin
 from core.tests.image import get_image_file
+from core.consts.agrotoxicos import AplicacaoEstados
 
 from rest_framework.reverse import reverse_lazy
 
@@ -16,7 +17,6 @@ from parameterized import parameterized
 
 from plantio.models import AplicacaoAgrotoxico
 from plantio.tests import recipes
-
 
 
 class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
@@ -54,7 +54,7 @@ class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(associacao.dataAplicacao, payload['dataAplicacao'])
         self.assertEqual(associacao.fotoAgrotoxico.name, '')
         self.assertEqual(associacao.dosagemAplicacao, payload['dosagemAplicacao'])
-        self.assertEqual(associacao.estadoAnalise, 'A')
+        self.assertEqual(associacao.estadoAnalise, AplicacaoEstados.SUCESSO)
 
     def test_cria_aplicacao_com_fotoAgrotoxico(self):
         payload = self._payload_fotoAgrotoxico()
@@ -69,13 +69,14 @@ class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
         self.assertIsNone(associacao.agrotoxico)
         self.assertNotEqual(associacao.fotoAgrotoxico.name, '')
         self.assertEqual(associacao.dosagemAplicacao, payload['dosagemAplicacao'])
-        self.assertEqual(associacao.estadoAnalise, 'A')
+        self.assertEqual(associacao.estadoAnalise, AplicacaoEstados.ANALISE)
 
     def test_cria_aplicacao_agrotoxico_sem_dosagemAplicacao(self):
         payload = self._payload_agrotoxico()
         del payload['dosagemAplicacao']
 
         response = self.client.post(self.url, data=payload)
+        breakpoint()
         self.assertEqual(response.status_code, 201, response.json())
         self.assertEqual(AplicacaoAgrotoxico.objects.count(), 1)
 
@@ -83,7 +84,7 @@ class AplicacaoAgrotoxicoAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(associacao.plantio, self.plantio)
         self.assertEqual(associacao.dataAplicacao, payload['dataAplicacao'])
         self.assertIsNone(associacao.dosagemAplicacao)
-        self.assertEqual(associacao.estadoAnalise, 'A')
+        self.assertEqual(associacao.estadoAnalise, AplicacaoEstados.SUCESSO)
 
     @parameterized.expand(['plantio', 'dataAplicacao'])
     def test_nao_cria_aplicacao_atributos_obrigatorios(self, campo):

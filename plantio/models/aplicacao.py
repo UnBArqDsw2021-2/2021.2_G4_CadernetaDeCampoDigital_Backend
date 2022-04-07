@@ -1,6 +1,6 @@
 from agrotoxico.models import Agrotoxico
 
-from core.consts.agrotoxicos import ESTADOS_CHOICES
+from core.consts.agrotoxicos import AplicacaoEstados
 
 from decimal import Decimal
 
@@ -22,4 +22,4 @@ class AplicacaoAgrotoxico(models.Model):
         max_digits=3, decimal_places=2, null=True,
         validators=[MinValueValidator(Decimal('0.01'))]
     )
-    estadoAnalise = models.CharField(max_length=1, choices=ESTADOS_CHOICES, default='A')
+    estadoAnalise = models.CharField(max_length=1, choices=AplicacaoEstados.choices, default=AplicacaoEstados.ANALISE)

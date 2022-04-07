@@ -2,6 +2,8 @@ from datetime import date
 
 from plantio.models import AplicacaoAgrotoxico
 
+from core.consts.agrotoxicos import AplicacaoEstados
+
 from rest_framework import serializers
 
 
@@ -9,12 +11,21 @@ class AplicacaoAgrotoxicoSerializer(serializers.ModelSerializer):
     class Meta:
         model = AplicacaoAgrotoxico
         fields = (
-            'plantio', 'agrotoxico', 'dataAplicacao', 'dosagemAplicacao', 'fotoAgrotoxico'
+            'plantio', 'agrotoxico', 'dataAplicacao', 'dosagemAplicacao', 'fotoAgrotoxico', 'estadoAnalise'
         )
+        read_only = 'estadoAnalise'
         extra_kwargs = {
             'agrotoxico': {'required': False},
             'fotoAgrotoxico': {'required': False}
         }
+
+    def create(self, validated_data):
+        estadoAnalise = AplicacaoEstados.SUCESSO
+
+        if validated_data.get("fotoAgrotoxico"):
+            estadoAnalise = AplicacaoEstados.ANALISE
+
+        return AplicacaoAgrotoxico.objects.create(estadoAnalise=estadoAnalise, **validated_data)
 
     def validate_dataAplicacao(self, dataAplicacao):
         if dataAplicacao > date.today():
