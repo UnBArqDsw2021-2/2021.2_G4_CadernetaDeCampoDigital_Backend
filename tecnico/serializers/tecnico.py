@@ -33,14 +33,3 @@ class TecnicoSerializer(UsuarioSerializer):
             usuario=usuario, emailVerificado=True,
             **validated_data
         )
-
-    def update(self, instance, validated_data):
-        if validated_data.get('usuario'):
-            usuario = validated_data.pop('usuario')
-            super().update(instance.usuario, usuario)
-
-        for key, value in validated_data.items():
-            setattr(instance, key, value)
-
-        instance.save()
-        return instance
