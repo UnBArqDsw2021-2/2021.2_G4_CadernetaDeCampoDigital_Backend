@@ -8,7 +8,9 @@ from propriedade.serializers.propriedade import PropriedadeSerializer, Proprieda
 
 from talhao.models import Talhao
 
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, ListAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, ListAPIView, DestroyAPIView
+from rest_framework.response import Response
+from rest_framework import status
 
 
 class PropriedadeAPIView(ListCreateAPIView):
@@ -41,3 +43,22 @@ class PropriedadeHistoricoPlantioAPIView(ListAPIView):
     def get_queryset(self):
         return Plantio.objects.filter(
             talhao__in=Talhao.objects.filter(**self.kwargs).values_list('idTalhao'))
+
+
+class PropriedadeDeleteTecnicoAPIView(DestroyAPIView):
+    serializer_class = PropriedadeDetailSerializer
+    lookup_field = 'idPropriedade'
+
+    def get_queryset(self):
+        return Propriedade.objects.all()
+
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+
+        if self.request.user.tipo != TECNICO:
+            return Response({"error": "Um produtor não pode remover técnico da propriedade"}, status=status.HTTP_400_BAD_REQUEST)
+        if self.request.user.idUsuario != instance.tecnico.usuario_id:
+            return Response({"error": "Somente o técnico que está atribuido a propriedade pode se remover"}, status=status.HTTP_400_BAD_REQUEST)
+
+        self.perform_destroy(instance.tecnico)
+        return Response(status=status.HTTP_204_NO_CONTENT)

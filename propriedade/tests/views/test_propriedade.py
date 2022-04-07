@@ -219,12 +219,16 @@ class PropriedadeHistoricoPlantioAPIView(APITestMixin, TestCase):
 
     def setUp(self):
         self.propriedade = propriedade.make()
-        self.url = reverse_lazy(
-            "propriedade-historico-plantio", kwargs={'idPropriedade': self.propriedade.idPropriedade})
+        self.url = self.get_url()
         self.talhoes = talhao.make(idPropriedade=self.propriedade, _quantity=3)
         talhao.make(idPropriedade=self.propriedade, _quantity=2)
         for t in self.talhoes:
             plantio.make(talhao=t)
+
+    def get_url(self, idPropriedade=None):
+        if idPropriedade is None:
+            idPropriedade = self.propriedade.idPropriedade
+        return reverse_lazy("propriedade-historico-plantio", kwargs={'idPropriedade': idPropriedade})
 
     def test_lista_plantios_do_talhao(self):
         response = self.client.get(self.url)
@@ -232,14 +236,64 @@ class PropriedadeHistoricoPlantioAPIView(APITestMixin, TestCase):
         self.assertEqual(len(response.json()), 3)
 
     def test_nao_lista_plantio_de_outra_propriedade(self):
-        url = reverse_lazy(
-            "propriedade-historico-plantio", kwargs={'idPropriedade': self.propriedade.idPropriedade})
         propriedade_diferente = propriedade.make()
         talhoes = talhao.make(idPropriedade=propriedade_diferente, _quantity=3)
         for t in talhoes:
             plantio.make(talhao=t)
 
-        response = self.client.get(url)
+        response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200, response.json())
         self.assertEqual(Plantio.objects.count(), 6)
         self.assertEqual(len(response.json()), 3)
+
+
+class PropriedadeDeleteTecnicoAPIView(APITestMixin, TestCase):
+
+    def setUp(self):
+        self.produtor = produtor.make()
+        self.tecnico = tecnico.make()
+        self.propriedade = propriedade.make(tecnico=self.tecnico)
+        self.url = self.get_url()
+
+    def get_url(self, idPropriedade=None):
+        if idPropriedade is None:
+            idPropriedade = self.propriedade.idPropriedade
+        return reverse_lazy("propriedade-delete-tecnico", kwargs={'idPropriedade': idPropriedade})
+
+    def test_deleta_tecnico_propriedade(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(self.tecnico.usuario))
+
+        response = self.client.delete(self.url)
+        data = Propriedade.objects.filter(idPropriedade=self.propriedade.idPropriedade).first()
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(data.tecnico, None)
+        self.assertEqual(self.propriedade.tecnico, self.tecnico)
+
+    def test_nao_deleta_tecnico_propriedade_inexistente(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(self.tecnico.usuario))
+        url = self.get_url('00000000-0000-4000-8000-000000000000')
+
+        response = self.client.delete(url)
+
+        self.assertEqual(response.status_code, 404, response.json())
+        self.assertIn('Não encontrado.', response.json()['detail'])
+
+    def test_nao_deleta_outro_tecnico_propriedade(self):
+        outro_tecnico = tecnico.make()
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(outro_tecnico.usuario))
+
+        response = self.client.delete(self.url)
+        error_message = 'Somente o técnico que está atribuido a propriedade pode se remover'
+
+        self.assertEqual(response.status_code, 400, response.json())
+        self.assertIn(error_message, response.json()['error'])
+
+    def test_produtor_nao_deleta_tecnico_propriedade(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(self.produtor.usuario))
+
+        response = self.client.delete(self.url)
+        error_message = 'Um produtor não pode remover técnico da propriedade'
+
+        self.assertEqual(response.status_code, 400, response.json())
+        self.assertIn(error_message, response.json()['error'])
