@@ -1,7 +1,7 @@
 from django.conf.urls import url
 from django.urls import include
 
-from plantio.views import plantio, aplicacao
+from plantio.views import plantio, aplicacao, aplicacao_analise
 
 
 urlpatterns = [
@@ -10,8 +10,14 @@ urlpatterns = [
 
         url(r'^aplicar/', include([
             url(
-                r'agrotoxico/$', aplicacao.AplicacaoAgrotoxicoListCreateAPIView.as_view(),
+                r'agrotoxico/$', aplicacao.AplicacaoAgrotoxicoCreateAPIView.as_view(),
                 name='plantio-associar'),
+        ])),
+
+        url(r'^analise/', include([
+            url(
+                r'agrotoxico/$', aplicacao_analise.AplicacaoAgrotoxicoAnaliseApiView.as_view(),
+                name="plantio-analise-aplicacao-agrotoxico"),
         ])),
     ]))
 ]
