@@ -243,3 +243,42 @@ class PropriedadeHistoricoPlantioAPIView(APITestMixin, TestCase):
         self.assertEqual(response.status_code, 200, response.json())
         self.assertEqual(Plantio.objects.count(), 6)
         self.assertEqual(len(response.json()), 3)
+
+class PropriedadeDeleteTecnicoAPIView(APITestMixin, TestCase):
+
+    def setUp(self):
+        self.produtor = produtor.make()
+        self.tecnico = tecnico.make()
+        self.propriedade = propriedade.make(tecnico=self.tecnico)
+        self.url = reverse_lazy(
+            "propriedade-delete-tecnico", kwargs={'idPropriedade': self.propriedade.idPropriedade})
+
+    def test_deleta_tecnico_propriedade(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(self.tecnico.usuario))
+        propriedade_dois = propriedade.make()
+
+        response = self.client.delete(self.url)
+        data = Propriedade.objects.filter(idPropriedade=self.propriedade.idPropriedade)[0]
+
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(data.tecnico, None)
+        self.assertEqual(self.propriedade.tecnico, self.tecnico)
+
+    def test_nao_deleta_outro_tecnico_propriedade(self):
+        outro_tecnico = tecnico.make()
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(outro_tecnico.usuario))
+
+        response = self.client.delete(self.url)
+        error_message = 'Somente o técnico que está atribuido a propriedade pode se remover'
+
+        self.assertEqual(response.status_code, 401, response.json())
+        self.assertIn(error_message, response.json()['error'])
+
+    def test_produtor_nao_deleta_tecnico_propriedade(self):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(self.produtor.usuario))
+
+        response = self.client.delete(self.url)
+        error_message = 'Um produtor não pode remover técnico da propriedade'
+
+        self.assertEqual(response.status_code, 401, response.json())
+        self.assertIn(error_message, response.json()['error'])
