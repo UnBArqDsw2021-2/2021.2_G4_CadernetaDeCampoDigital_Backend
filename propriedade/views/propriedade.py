@@ -8,7 +8,7 @@ from propriedade.serializers.propriedade import PropriedadeSerializer, Proprieda
 
 from talhao.models import Talhao
 
-from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, ListAPIView, DestroyAPIView
+from rest_framework.generics import ListCreateAPIView, RetrieveUpdateAPIView, ListAPIView, DestroyAPIView
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -29,11 +29,15 @@ class PropriedadeAPIView(ListCreateAPIView):
         return Propriedade.objects.filter(produtor=self.request.user.produtor)
 
 
-class PropriedadeRetrieveAPIView(RetrieveAPIView):
-    serializer_class = PropriedadeDetailSerializer
+class PropriedadeRetrieveUpdateAPIView(RetrieveUpdateAPIView):
 
     def get_queryset(self):
         return Propriedade.objects.all()
+
+    def get_serializer_class(self):
+        if self.request.method.lower() == 'get':
+            return PropriedadeDetailSerializer
+        return PropriedadeSerializer
 
 
 class PropriedadeHistoricoPlantioAPIView(ListAPIView):

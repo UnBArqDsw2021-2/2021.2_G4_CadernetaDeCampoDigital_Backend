@@ -155,7 +155,7 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(1, len(response.json()))
 
 
-class PropriedadeRetrieveAPIViewTest(APITestMixin, TestCase):
+class PropriedadeRetrieveUpdateAPIViewTest(APITestMixin, TestCase):
 
     def setUp(self):
         self.propriedade = propriedade.make()
@@ -164,10 +164,22 @@ class PropriedadeRetrieveAPIViewTest(APITestMixin, TestCase):
 
         self.url = self.get_url()
 
+    def _payload(self):
+        return {
+            "cep": "70256530",
+            "estado": "DF",
+            "cidade": "Brasília",
+            "bairro": "Asa Sul",
+            "complemento": "Conjunto Residencial 38",
+            "numeroCasa": 12,
+            "hectares": Decimal("6.5"),
+            "logradouro": "Chácara do Amanhã",
+        }
+
     def get_url(self, idPropriedade=None):
         if idPropriedade is None:
             idPropriedade = self.propriedade.idPropriedade
-        return reverse_lazy("propriedade-detail", kwargs={'pk': idPropriedade})
+        return reverse_lazy("propriedade-detail-update", kwargs={'pk': idPropriedade})
 
     def test_detalha_propriedade_existente(self):
         response = self.client.get(self.url, format="json")
@@ -211,6 +223,29 @@ class PropriedadeRetrieveAPIViewTest(APITestMixin, TestCase):
 
         response = self.client.get(url, format="json")
 
+        self.assertEqual(response.status_code, 404, response.json())
+        self.assertIn('Não encontrado.', response.json()['detail'])
+
+    def test_atualiza_propriedade(self):
+        payload = self._payload()
+        response = self.client.patch(self.url, data=payload, format="json")
+        self.assertEqual(response.status_code, 200, response.json())
+        self.assertEqual(Propriedade.objects.count(), 1)
+
+        self.propriedade.refresh_from_db()
+        self.assertEqual(self.propriedade.cep, payload["cep"])
+        self.assertEqual(self.propriedade.estado, payload["estado"])
+        self.assertEqual(self.propriedade.cidade, payload["cidade"])
+        self.assertEqual(self.propriedade.bairro, payload["bairro"])
+        self.assertEqual(self.propriedade.complemento, payload["complemento"])
+        self.assertEqual(self.propriedade.numeroCasa, payload["numeroCasa"])
+        self.assertEqual(self.propriedade.hectares, payload["hectares"])
+        self.assertEqual(self.propriedade.logradouro, payload["logradouro"])
+
+    def test_nao_atualiza_propriedade_inexistente(self):
+        payload = self._payload()
+        url = self.get_url('00000000-0000-4000-8000-000000000000')
+        response = self.client.patch(url, data=payload, format="json")
         self.assertEqual(response.status_code, 404, response.json())
         self.assertIn('Não encontrado.', response.json()['detail'])
 
