@@ -1,20 +1,21 @@
 from datetime import date
+from distutils.command.upload import upload
 
 from plantio.models import AplicacaoAgrotoxico
 
 from rest_framework import serializers
 
 
-# TODO: As linhas comentadas fazem referência a implementação da issue 152
 class AplicacaoAgrotoxicoSerializer(serializers.ModelSerializer):
-    # fotoAgrotoxico = serializers
-
     class Meta:
         model = AplicacaoAgrotoxico
         fields = (
-            # 'idAgrotoxico', 'dataAplicacao', 'fotoAgrotoxico', 'dosagemAplicacao'
-            'plantio', 'agrotoxico', 'dataAplicacao', 'dosagemAplicacao'
+            'plantio', 'agrotoxico', 'dataAplicacao', 'dosagemAplicacao', 'fotoAgrotoxico'
         )
+        extra_kwargs = {
+            'agrotoxico': {'required': False},
+            'fotoAgrotoxico': {'required': False}
+        }
 
     def validate_dataAplicacao(self, dataAplicacao):
         if dataAplicacao > date.today():
