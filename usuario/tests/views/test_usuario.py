@@ -14,7 +14,7 @@ from usuario.models import Usuario
 
 
 class UsuarioRetrieveUpdateAPIViewTest(APITestMixin, TestCase):
- 
+
     def setUp(self):
         self.produtor = produtor.make()
         self.tecnico = tecnico.make()
@@ -81,7 +81,7 @@ class UsuarioRetrieveUpdateAPIViewTest(APITestMixin, TestCase):
     def test_detalha_infos_do_usuario(self, tipo, campos_proprios):
         produtor.make(_quantity=3)
         tecnico.make(_quantity=3)
-        campos_comuns = ('nome', 'cpf', 'telefone', 'dataNascimento') 
+        campos_comuns = ('nome', 'cpf', 'telefone', 'dataNascimento')
         response = self.client.get(getattr(self, f'url_{tipo}'))
         self.assertEqual(response.status_code, 200, response.json())
 

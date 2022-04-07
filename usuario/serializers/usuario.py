@@ -25,7 +25,7 @@ class UsuarioSerializer(serializers.ModelSerializer):
             instance.set_password(password)
 
         for key, value in validated_data.items():
-                setattr(instance, key, value)
+            setattr(instance, key, value)
 
         instance.save()
         return instance
