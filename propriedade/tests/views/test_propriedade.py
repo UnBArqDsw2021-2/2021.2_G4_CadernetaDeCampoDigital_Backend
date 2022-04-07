@@ -264,7 +264,7 @@ class PropriedadeDeleteTecnicoAPIView(APITestMixin, TestCase):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(self.tecnico.usuario))
 
         response = self.client.delete(self.url)
-        data = Propriedade.objects.filter(idPropriedade=self.propriedade.idPropriedade)[0]
+        data = Propriedade.objects.filter(idPropriedade=self.propriedade.idPropriedade).first()
 
         self.assertEqual(response.status_code, 204)
         self.assertEqual(data.tecnico, None)
