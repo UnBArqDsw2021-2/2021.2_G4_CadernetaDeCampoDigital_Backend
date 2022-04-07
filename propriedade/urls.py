@@ -5,7 +5,7 @@ from django.urls import include
 
 from propriedade.views.propriedade import (
     PropriedadeAPIView, PropriedadeHistoricoPlantioAPIView,
-    PropriedadeRetrieveUpdateAPIView
+    PropriedadeRetrieveUpdateAPIView, PropriedadeDeleteTecnicoAPIView
 )
 
 
@@ -22,5 +22,10 @@ urlpatterns = [
             r'(?P<idPropriedade>{})/historico/plantio/$'.format(UUID4_URL),
             PropriedadeHistoricoPlantioAPIView.as_view(),
             name='propriedade-historico-plantio'),
+
+        url(
+            r'(?P<idPropriedade>{})/tecnico/$'.format(UUID4_URL),
+            PropriedadeDeleteTecnicoAPIView.as_view(),
+            name='propriedade-delete-tecnico'),
     ]))
 ]
