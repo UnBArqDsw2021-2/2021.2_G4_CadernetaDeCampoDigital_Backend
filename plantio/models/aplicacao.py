@@ -1,4 +1,3 @@
-from distutils.command.upload import upload
 from agrotoxico.models import Agrotoxico
 
 from core.consts.agrotoxicos import ESTADOS_CHOICES

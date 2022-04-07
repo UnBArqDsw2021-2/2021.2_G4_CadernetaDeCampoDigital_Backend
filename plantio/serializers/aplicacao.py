@@ -1,5 +1,4 @@
 from datetime import date
-from distutils.command.upload import upload
 
 from plantio.models import AplicacaoAgrotoxico
 
@@ -23,12 +22,27 @@ class AplicacaoAgrotoxicoSerializer(serializers.ModelSerializer):
         return dataAplicacao
 
     def validate(self, data):
-        if data.get('agrotoxico'):
-            query = AplicacaoAgrotoxico.objects.filter(
-                plantio=data['plantio'], agrotoxico=data['agrotoxico'], dataAplicacao=data['dataAplicacao'])
 
-            if query.exists():
-                raise serializers.ValidationError(
-                    f'Esse agrotóxico já foi aplicado nessa plantação na data {data["dataAplicacao"]}.')
+        self._validate_agrotoxico_xor_fotoAgrotoxico(data.get('agrotoxico'), data.get('fotoAgrotoxico'))
+        self._validate_agrotoxico(data.get('agrotoxico'), data['plantio'], data['dataAplicacao'])
 
         return data
+
+    def _validate_agrotoxico_xor_fotoAgrotoxico(self, agrotoxico, fotoAgrotoxico):
+        if (agrotoxico is not None) ^ (fotoAgrotoxico is not None):
+            return
+
+        raise serializers.ValidationError(
+            'É necessário enviar ou o agrotóxico ou a foto do agrotóxico.'
+        )
+
+    def _validate_agrotoxico(self, agrotoxico, plantio, dataAplicacao):
+        if not agrotoxico:
+            return
+
+        query = AplicacaoAgrotoxico.objects.filter(
+                plantio=plantio, agrotoxico=agrotoxico, dataAplicacao=dataAplicacao)
+
+        if query.exists():
+            raise serializers.ValidationError(
+                f'Esse agrotóxico já foi aplicado nessa plantação na data {dataAplicacao}.')
