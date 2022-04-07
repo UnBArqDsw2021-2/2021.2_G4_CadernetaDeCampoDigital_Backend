@@ -1,6 +1,8 @@
 from agrotoxico.models import Agrotoxico
 from agrotoxico.serializers.agrotoxico import AgrotoxicoCreateSerializer, AgrotoxicoListSerializer
 
+from cultura.models import Espera
+
 from plantio.models import AplicacaoAgrotoxico
 
 from rest_framework.generics import ListCreateAPIView, DestroyAPIView
@@ -25,6 +27,12 @@ class AgrotoxicoDestroyAPIView(DestroyAPIView):
         if AplicacaoAgrotoxico.objects.filter(agrotoxico=instance).exists():
             return Response(
                 {'agrotoxico': 'Não é possível apagar um agrotoxico que já foi aplicado em um plantio.'},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+        if Espera.objects.filter(agrotoxico=instance).exists():
+            return Response(
+                {'agrotoxico': 'Não é possível apagar um agrotoxico que está em tempo de espera de uma cultura.'},
                 status=status.HTTP_400_BAD_REQUEST
             )
 

@@ -2,6 +2,8 @@ from django.test import TestCase
 
 from core.tests.mixin import APITestMixin
 
+from cultura.tests.recipes import espera
+
 from rest_framework.reverse import reverse_lazy
 
 from parameterized import parameterized
@@ -111,12 +113,22 @@ class AgrotoxicoDestroyAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(response.status_code, 404, response.json())
         self.assertIn('Não encontrado.', response.json()['detail'])
 
-    def test_nao_deleta_agrotoxico_sendo_usado(self):
+    def test_nao_deleta_agrotoxico_sendo_aplicado(self):
         aplicacao.make(agrotoxico=self.agrotoxico)
         response = self.client.delete(self.url)
         self.assertEqual(response.status_code, 400)
         self.assertIn(
             'Não é possível apagar um agrotoxico que já foi aplicado em um plantio.',
+            response.json()['agrotoxico']
+        )
+        self.assertEqual(Agrotoxico.objects.count(), 1)
+
+    def test_nao_deleta_agrotoxico_sendo_esperado(self):
+        espera.make(agrotoxico=self.agrotoxico)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(
+            'Não é possível apagar um agrotoxico que está em tempo de espera de uma cultura.',
             response.json()['agrotoxico']
         )
         self.assertEqual(Agrotoxico.objects.count(), 1)
