@@ -244,6 +244,7 @@ class PropriedadeHistoricoPlantioAPIView(APITestMixin, TestCase):
         self.assertEqual(Plantio.objects.count(), 6)
         self.assertEqual(len(response.json()), 3)
 
+
 class PropriedadeDeleteTecnicoAPIView(APITestMixin, TestCase):
 
     def setUp(self):
@@ -255,7 +256,6 @@ class PropriedadeDeleteTecnicoAPIView(APITestMixin, TestCase):
 
     def test_deleta_tecnico_propriedade(self):
         self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(self.tecnico.usuario))
-        propriedade_dois = propriedade.make()
 
         response = self.client.delete(self.url)
         data = Propriedade.objects.filter(idPropriedade=self.propriedade.idPropriedade)[0]

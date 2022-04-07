@@ -10,7 +10,7 @@ from talhao.models import Talhao
 
 from rest_framework.generics import ListCreateAPIView, RetrieveAPIView, ListAPIView, DestroyAPIView
 from rest_framework.response import Response
-from rest_framework import status,viewsets
+from rest_framework import status
 
 
 class PropriedadeAPIView(ListCreateAPIView):
@@ -54,9 +54,11 @@ class PropriedadeDeleteTecnicoAPIView(DestroyAPIView):
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
+
         if self.request.user.tipo != TECNICO:
             return Response({"error": "Um produtor não pode remover técnico da propriedade"}, status=status.HTTP_401_UNAUTHORIZED)
         if self.request.user.idUsuario != instance.tecnico.usuario_id:
             return Response({"error": "Somente o técnico que está atribuido a propriedade pode se remover"}, status=status.HTTP_401_UNAUTHORIZED)
+
         self.perform_destroy(instance.tecnico)
         return Response(status=status.HTTP_204_NO_CONTENT)
