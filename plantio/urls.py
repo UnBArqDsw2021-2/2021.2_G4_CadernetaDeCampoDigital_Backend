@@ -10,7 +10,7 @@ urlpatterns = [
 
         url(r'^aplicar/', include([
             url(
-                r'agrotoxico/$', aplicacao.AplicacaoAgrotoxicoAPIView.as_view(),
+                r'agrotoxico/$', aplicacao.AplicacaoAgrotoxicoListCreateAPIView.as_view(),
                 name='plantio-associar'),
         ])),
     ]))

@@ -42,6 +42,9 @@ class APITestMixin:
         client.post = partial(client.post, format='json')
         return client
 
+    def set_client_usuario(self, usuario):
+        self.client.credentials(HTTP_AUTHORIZATION='Bearer ' + self.get_header_credencial(usuario))
+
     @classmethod
     def setUpClass(cls):
         # NOTE: Se o setUp não for na APITestMixin, executa ele primeiro e
