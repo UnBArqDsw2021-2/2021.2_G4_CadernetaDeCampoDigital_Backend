@@ -56,9 +56,9 @@ class PropriedadeDeleteTecnicoAPIView(DestroyAPIView):
         instance = self.get_object()
 
         if self.request.user.tipo != TECNICO:
-            return Response({"error": "Um produtor não pode remover técnico da propriedade"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error": "Um produtor não pode remover técnico da propriedade"}, status=status.HTTP_400_BAD_REQUEST)
         if self.request.user.idUsuario != instance.tecnico.usuario_id:
-            return Response({"error": "Somente o técnico que está atribuido a propriedade pode se remover"}, status=status.HTTP_401_UNAUTHORIZED)
+            return Response({"error": "Somente o técnico que está atribuido a propriedade pode se remover"}, status=status.HTTP_400_BAD_REQUEST)
 
         self.perform_destroy(instance.tecnico)
         return Response(status=status.HTTP_204_NO_CONTENT)
