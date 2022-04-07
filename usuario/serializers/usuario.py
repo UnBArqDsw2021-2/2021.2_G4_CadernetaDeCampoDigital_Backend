@@ -18,3 +18,14 @@ class UsuarioSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         raise NotImplementedError('Método create não implementado pela classe pai.')
+
+    def update(self, instance, validated_data):
+        if validated_data.get('senha'):
+            password = validated_data.pop('senha')
+            instance.set_password(password)
+
+        for key, value in validated_data.items():
+                setattr(instance, key, value)
+
+        instance.save()
+        return instance
