@@ -3,7 +3,10 @@ from core.consts.urls import UUID4_URL
 from django.conf.urls import url
 from django.urls import include
 
-from propriedade.views.propriedade import PropriedadeAPIView, PropriedadeHistoricoPlantioAPIView, PropriedadeRetrieveAPIView
+from propriedade.views.propriedade import (
+    PropriedadeAPIView, PropriedadeHistoricoPlantioAPIView,
+    PropriedadeRetrieveUpdateAPIView
+)
 
 
 urlpatterns = [
@@ -12,8 +15,8 @@ urlpatterns = [
 
         url(
             r'^(?P<pk>{})/$'.format(UUID4_URL),
-            PropriedadeRetrieveAPIView.as_view(),
-            name='propriedade-detail'),
+            PropriedadeRetrieveUpdateAPIView.as_view(),
+            name='propriedade-detail-update'),
 
         url(
             r'(?P<idPropriedade>{})/historico/plantio/$'.format(UUID4_URL),
