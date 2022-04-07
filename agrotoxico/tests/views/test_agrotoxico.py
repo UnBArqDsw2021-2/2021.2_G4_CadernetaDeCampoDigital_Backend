@@ -9,6 +9,8 @@ from parameterized import parameterized
 from agrotoxico.models import Agrotoxico
 from agrotoxico.tests.recipes import tipo_agrotoxico as tipo_agrotoxico_recipe, agrotoxico as agrotoxico_recipe
 
+from plantio.tests.recipes import aplicacao
+
 
 class AgrotoxicoListCreateAPIViewTest(APITestMixin, TestCase):
     url = reverse_lazy("agrotoxico-list-create")
@@ -85,3 +87,36 @@ class AgrotoxicoListCreateAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(agrotoxico.nome, data["nome"])
         self.assertEqual(str(tipo_agrotoxico.idTipoAgrotoxico), data["tipo"]["idTipoAgrotoxico"])
         self.assertEqual(tipo_agrotoxico.nome, data["tipo"]["nome"])
+
+
+class AgrotoxicoDestroyAPIViewTest(APITestMixin, TestCase):
+
+    def setUp(self):
+        self.agrotoxico = agrotoxico_recipe.make()
+        self.url = self.get_url()
+
+    def get_url(self, idAgrotoxico=None):
+        if idAgrotoxico is None:
+            idAgrotoxico = self.agrotoxico.idAgrotoxico
+        return reverse_lazy("agrotoxico-destroy", kwargs={'pk': idAgrotoxico})
+
+    def test_deleta_agrotoxico(self):
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, 204)
+        self.assertEqual(Agrotoxico.objects.count(), 0)
+
+    def test_nao_deleta_agrotoxico_inexistente(self):
+        url = self.get_url('00000000-0000-4000-8000-000000000000')
+        response = self.client.delete(url)
+        self.assertEqual(response.status_code, 404, response.json())
+        self.assertIn('Não encontrado.', response.json()['detail'])
+
+    def test_nao_deleta_agrotoxico_sendo_usado(self):
+        aplicacao.make(agrotoxico=self.agrotoxico)
+        response = self.client.delete(self.url)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn(
+            'Não é possível apagar um agrotoxico que já foi aplicado em um plantio.',
+            response.json()['agrotoxico']
+        )
+        self.assertEqual(Agrotoxico.objects.count(), 1)
