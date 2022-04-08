@@ -12,6 +12,7 @@ coverage
 django-fake-model==0.1.4
 django-filter==21.1
 django-phonenumber-field[phonenumberslite]
+django-storages[azure]==1.12.3
 django-polymorphic==3.1.0
 freezegun==1.2.1
 ipdb==0.13.9

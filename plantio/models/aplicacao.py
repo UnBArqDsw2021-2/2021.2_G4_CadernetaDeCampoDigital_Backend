@@ -1,6 +1,6 @@
 from agrotoxico.models import Agrotoxico
 
-from core.consts.agrotoxicos import ESTADOS_CHOICES
+from core.consts.agrotoxicos import AplicacaoEstados
 
 from decimal import Decimal
 
@@ -17,10 +17,9 @@ class AplicacaoAgrotoxico(models.Model):
     plantio = models.ForeignKey(Plantio, on_delete=models.PROTECT)
     agrotoxico = models.ForeignKey(Agrotoxico, null=True, on_delete=models.PROTECT)
     dataAplicacao = models.DateField()
-    # TODO: Implementação de foto (Azure) -> issue 152
-    # caminhoFotoAgrotoxico = models.CharField(max_length=255)
+    fotoAgrotoxico = models.ImageField(max_length=255, null=True)
     dosagemAplicacao = models.DecimalField(
         max_digits=3, decimal_places=2, null=True,
         validators=[MinValueValidator(Decimal('0.01'))]
     )
-    estadoAnalise = models.CharField(max_length=1, choices=ESTADOS_CHOICES, default='A')
+    estadoAnalise = models.CharField(max_length=1, choices=AplicacaoEstados.choices, default=AplicacaoEstados.ANALISE)
