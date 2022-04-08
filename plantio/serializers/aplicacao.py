@@ -20,12 +20,12 @@ class AplicacaoAgrotoxicoSerializer(serializers.ModelSerializer):
         }
 
     def create(self, validated_data):
-        estadoAnalise = AplicacaoEstados.SUCESSO
+        validated_data["estadoAnalise"] = AplicacaoEstados.SUCESSO
 
         if validated_data.get("fotoAgrotoxico"):
-            estadoAnalise = AplicacaoEstados.ANALISE
+            validated_data["estadoAnalise"] = AplicacaoEstados.ANALISE
 
-        return AplicacaoAgrotoxico.objects.create(estadoAnalise=estadoAnalise, **validated_data)
+        return super().create(validated_data)
 
     def validate_dataAplicacao(self, dataAplicacao):
         if dataAplicacao > date.today():

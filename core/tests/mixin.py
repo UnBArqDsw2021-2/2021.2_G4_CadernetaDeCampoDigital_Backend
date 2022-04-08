@@ -16,6 +16,9 @@ from rest_framework.test import APIClient
 from rest_framework_simplejwt.tokens import RefreshToken
 
 
+MEDIA_ROOT = tempfile.mkdtemp()
+
+
 class APITestMixin:
 
     # Informações obrigatórias
@@ -60,9 +63,6 @@ class APITestMixin:
         )
         self.user.id = self.user.idUsuario
         self.client = self.get_client()
-
-
-MEDIA_ROOT = tempfile.mkdtemp()
 
 
 @override_settings(MEDIA_ROOT=MEDIA_ROOT)
