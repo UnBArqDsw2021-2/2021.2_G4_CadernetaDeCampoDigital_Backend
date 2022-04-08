@@ -18,7 +18,7 @@ class AplicacaoAgrotoxicoAnaliseApiView(ListAPIView):
         user = self.request.user
 
         if user.is_anonymous:
-            return AplicacaoAgrotoxico.objects.all()
+            return AplicacaoAgrotoxico.objects.none()
 
         if user.tipo == TECNICO:
             propriedades = user.tecnico.propriedade_set
