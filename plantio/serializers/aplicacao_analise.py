@@ -7,12 +7,13 @@ from rest_framework import serializers
 
 
 class AplicacaoAgrotoxicoAnaliseSerializer(serializers.ModelSerializer):
-    plantio = PlantioSerializer()
-    produtor = ProdutorSerializer(source='plantio.talhao.idPropriedade.produtor')
+    plantio = PlantioSerializer(read_only=True)
+    produtor = ProdutorSerializer(source='propriedade.produtor', read_only=True)
 
     class Meta:
         model = AplicacaoAgrotoxico
         fields = (
-            'plantio', 'agrotoxico', 'dataAplicacao', 'dosagemAplicacao', 'fotoAgrotoxico',
-            'estadoAnalise', 'produtor'
+            'idAplicacao', 'plantio', 'agrotoxico', 'dataAplicacao',
+            'dosagemAplicacao', 'fotoAgrotoxico', 'estadoAnalise', 'produtor'
         )
+        read_only_fields = ('idAplicacao',)
