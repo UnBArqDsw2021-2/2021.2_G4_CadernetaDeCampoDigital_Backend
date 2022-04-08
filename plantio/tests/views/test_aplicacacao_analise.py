@@ -1,6 +1,5 @@
 from datetime import date
 from decimal import Decimal
-from urllib import response
 from parameterized import parameterized
 
 from django.test import TestCase
@@ -13,6 +12,7 @@ from plantio.tests import recipes
 from agrotoxico.tests.recipes import agrotoxico as agrotoxico_recipe
 from tecnico.tests.recipes import tecnico as tecnico_recipe
 from produtor.tests.recipes import produtor as produtor_recipe
+
 
 class AplicacaoAgrotoxicoAnaliseAPIViewTest(APITestMixin, TestCase):
     url = reverse_lazy('plantio-analise-aplicacao-agrotoxico')
@@ -68,7 +68,7 @@ class AplicacaoAgrotoxicoAnaliseUpdateAPIViewTest(APIImageTestMixin):
 
     def test_tecnico_atualiza_aplicacao(self):
         payload = self._payload()
-        
+
         self.set_client_usuario(self.tecnico.usuario)
 
         response = self.client.patch(self.get_url(), payload)
@@ -93,10 +93,10 @@ class AplicacaoAgrotoxicoAnaliseUpdateAPIViewTest(APIImageTestMixin):
         response = self.client.patch(self.get_url(), payload)
 
         self.assertEqual(response.status_code, 200)
-        
+
         aplicacao = response.json()
         self.aplicacao.refresh_from_db()
-        
+
         self.assertIsNotNone(getattr(self.aplicacao, campo))
         self.assertIsNotNone(aplicacao.get(campo))
 
@@ -109,14 +109,14 @@ class AplicacaoAgrotoxicoAnaliseUpdateAPIViewTest(APIImageTestMixin):
         response = self.client.patch(self.get_url(), payload)
 
         self.assertEqual(response.status_code, 200)
-        
+
         self.aplicacao.refresh_from_db()
-        
+
         self.assertNotEqual(self.aplicacao.propriedade.produtor, payload["produtor"])
 
     def test_produtor_nao_atualiza_aplicacao(self):
         payload = self._payload()
-        
+
         self.set_client_usuario(self.produtor.usuario)
 
         response = self.client.patch(self.get_url(), payload)
