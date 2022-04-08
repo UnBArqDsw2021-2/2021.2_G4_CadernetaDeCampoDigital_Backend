@@ -1,9 +1,6 @@
 from plantio.models import AplicacaoAgrotoxico
 from plantio.serializers.aplicacao_analise import AplicacaoAgrotoxicoAnaliseSerializer
 
-from talhao.models import Talhao
-from plantio.models import Plantio
-
 from rest_framework.generics import ListAPIView, UpdateAPIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -20,15 +17,11 @@ class AplicacaoAgrotoxicoAnaliseApiView(ListAPIView):
         if user.is_anonymous:
             return AplicacaoAgrotoxico.objects.none()
 
-        if user.tipo == TECNICO:
-            propriedades = user.tecnico.propriedade_set
-        else:
-            propriedades = user.produtor.propriedade_set
+        propriedades = getattr(user, user.tipo).propriedade_set
 
-        talhoes = Talhao.objects.filter(idPropriedade__in=propriedades.all())
-        plantios = Plantio.objects.filter(talhao__in=talhoes.all())
-
-        return AplicacaoAgrotoxico.objects.filter(plantio__in=plantios).all()
+        return AplicacaoAgrotoxico.objects.filter(
+            plantio__talhao__idPropriedade__in=propriedades.all()
+        )
 
 
 class AplicacaoAgrotoxicoAnaliseUpdateAPIView(UpdateAPIView):
