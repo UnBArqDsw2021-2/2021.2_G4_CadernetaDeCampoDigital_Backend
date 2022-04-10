@@ -3,7 +3,8 @@ checks:
   similar-code:
     enabled: false
   method-complexity:
-    enabled: false
+    config:
+      threshold: 7
 plugins:
   pep8:
     enabled: true
