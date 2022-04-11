@@ -26,7 +26,6 @@ class ProdutorSerializer(UsuarioSerializer):
             password=password,
             tipo=PRODUTOR,
             **usuario_data
-
         )
 
         return Produtor.objects.create(usuario=usuario, **validated_data)

@@ -12,9 +12,9 @@ migrations:
 
 test:
 ifeq ($(TEST),)
-	docker-compose run --rm --entrypoint "pytest $(FILE) -s" caderneta_digital
+	docker-compose run --rm --entrypoint "pytest $(FILE) -s --disable-warnings" caderneta_digital
 else
-	docker-compose run --rm --entrypoint "pytest $(FILE) -s -k $(TEST)" caderneta_digital
+	docker-compose run --rm --entrypoint "pytest $(FILE) -s --disable-warnings -k $(TEST)" caderneta_digital
 endif
 
 bash:
