@@ -3,7 +3,6 @@ from core.consts.urls import UUID4_URL
 from django.conf.urls import url
 from django.urls import include
 
-from core.consts.urls import UUID4_URL
 from plantio.views import plantio, aplicacao, aplicacao_analise
 
 
