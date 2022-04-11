@@ -19,6 +19,13 @@ class PlantioSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError('Data de plantio no futuro.')
         return dataPlantio
 
+    def update(self, instance, validated_data):
+        if(validated_data.get('talhao')):
+            if validated_data.get('talhao').idPropriedade != instance.talhao.idPropriedade:
+                raise serializers.ValidationError({'error': 'Esse talhão não pertence a propriedade onde está localizado esse plantio.'})
+
+        return super().update(instance, validated_data)
+
 
 class PlantioListSerializer(PlantioSerializer):
     cultura = CulturaSerializer()
