@@ -23,3 +23,7 @@ class AplicacaoAgrotoxico(models.Model):
         validators=[MinValueValidator(Decimal('0.01'))]
     )
     estadoAnalise = models.CharField(max_length=1, choices=AplicacaoEstados.choices, default=AplicacaoEstados.ANALISE)
+
+    @property
+    def propriedade(self):
+        return self.plantio.talhao.idPropriedade
