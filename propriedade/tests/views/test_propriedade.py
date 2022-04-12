@@ -1,4 +1,5 @@
 from core.consts.plantios import PLANTADO, FINALIZADO
+from core.consts.usuarios import PRODUTOR, TECNICO
 
 from decimal import Decimal
 
@@ -159,6 +160,9 @@ class PropriedadeSemTecnicoAPIViewTest(APITestMixin, TestCase):
     url = reverse_lazy("propriedade-list-sem-tecnico")
 
     def setUp(self):
+        self.user.tipo = TECNICO
+        self.user.save(update_fields=['tipo'])
+
         self.produtor = produtor.make(usuario__cpf='66326787009')
         self.tecnico = tecnico.make(usuario__cpf='42205106058')
         propriedade.make(tecnico=self.tecnico, _quantity=3)
@@ -166,7 +170,7 @@ class PropriedadeSemTecnicoAPIViewTest(APITestMixin, TestCase):
         for prop in propriedade.make(tecnico=None, _quantity=3):
             self.prop_sem_tecnico.append(str(prop.idPropriedade))
 
-    def test_list_propriedades_sem_tecnico(self):
+    def test_lista_propriedades_sem_tecnico(self):
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
         self.assertEqual(len(response.json()), 3)
@@ -174,10 +178,17 @@ class PropriedadeSemTecnicoAPIViewTest(APITestMixin, TestCase):
             [prop["idPropriedade"] for prop in response.json()]
         ))
 
-    def test_list_vazio_propriedades_sem_tecnico(self):
+    def test_lista_vazio_propriedades_sem_tecnico(self):
         Propriedade.objects.filter(tecnico__isnull=True).delete()
         response = self.client.get(self.url)
         self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 0)
+        self.assertEqual(response.json(), [])
+
+    def test_lista_vazio_produtor_acessando(self):
+        self.user.tipo = PRODUTOR
+        self.user.save(update_fields=['tipo'])
+        response = self.client.get(self.url)
         self.assertEqual(len(response.json()), 0)
         self.assertEqual(response.json(), [])
 

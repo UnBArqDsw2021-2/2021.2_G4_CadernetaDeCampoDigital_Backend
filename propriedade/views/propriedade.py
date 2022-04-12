@@ -31,7 +31,12 @@ class PropriedadeAPIView(ListCreateAPIView):
 
 class PropriedadeSemTecnicoAPIView(ListAPIView):
     serializer_class = PropriedadeDetailSerializer
-    queryset = Propriedade.objects.filter(tecnico__isnull=True)
+
+    def get_queryset(self):
+        user = self.request.user
+        if user.is_anonymous or user.tipo != TECNICO:
+            return Propriedade.objects.none()
+        return Propriedade.objects.filter(tecnico__isnull=True)
 
 
 class PropriedadeRetrieveUpdateAPIView(RetrieveUpdateAPIView):
