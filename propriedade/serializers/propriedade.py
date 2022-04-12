@@ -11,7 +11,7 @@ from produtor.serializers.produtor import ProdutorSerializer
 from tecnico.models.tecnico import Tecnico
 from tecnico.serializers.tecnico import TecnicoSerializer
 
-from talhao.serializers.talhao import TalhaoListSerializer
+from talhao.serializers.talhao import TalhaoDetailSerializer
 
 
 class PropriedadeSerializer(serializers.ModelSerializer):
@@ -57,7 +57,7 @@ class PropriedadeDetailSerializer(PropriedadeSerializer):
         read_only_fields = fields
 
     def get_talhao(self, propriedade):
-        return TalhaoListSerializer(
+        return TalhaoDetailSerializer(
             propriedade.talhao_set,
             context={'plantio_estado_filtro': [PLANTADO, CARENCIA, COLHEITA]},
             many=True
