@@ -9,8 +9,9 @@ class CulturaSerializer(serializers.ModelSerializer):
         max_length=80,
         validators=[UniqueValidator(queryset=Cultura.objects.all())]
     )
+    foto = serializers.ImageField(required=True, allow_empty_file=False)
 
     class Meta:
         model = Cultura
-        fields = ('idCultura', 'nome')
+        fields = ('idCultura', 'nome', 'foto')
         read_only_fields = ('idCultura',)
