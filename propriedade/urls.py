@@ -5,13 +5,15 @@ from django.urls import include
 
 from propriedade.views.propriedade import (
     PropriedadeAPIView, PropriedadeHistoricoPlantioAPIView,
-    PropriedadeRetrieveUpdateAPIView, PropriedadeDeleteTecnicoAPIView
+    PropriedadeRetrieveUpdateAPIView, PropriedadeDeleteTecnicoAPIView,
+    PropriedadeSemTecnicoAPIView
 )
 
 
 urlpatterns = [
     url(r'^propriedade/', include([
         url(r'^$', PropriedadeAPIView.as_view(), name='propriedade-create-list'),
+        url(r'^sem-tecnico/$', PropriedadeSemTecnicoAPIView.as_view(), name='propriedade-list-sem-tecnico'),
 
         url(
             r'^(?P<pk>{})/$'.format(UUID4_URL),
