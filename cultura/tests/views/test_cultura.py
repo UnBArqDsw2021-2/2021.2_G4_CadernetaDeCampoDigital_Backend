@@ -40,12 +40,12 @@ class CulturaListCreateAPIViewTest(APIImageTestMixin):
         ('nome', 'Este campo é obrigatório.'),
         ('foto', 'Nenhum arquivo foi submetido.')
     ])
-    def test_nao_cria_cultura_atributos_obrigatorios(self, campo, mensage):
+    def test_nao_cria_cultura_atributos_obrigatorios(self, campo, mensagem):
         payload = self._payload()
         del payload[campo]
         response = self.client.post(self.url, data=payload, format='multipart')
         self.assertEqual(response.status_code, 400, response.json())
-        self.assertIn(mensage, response.json()[campo])
+        self.assertIn(mensagem, response.json()[campo])
 
     def test_nao_cria_cultura_nome_nao_unico(self):
         payload = self._payload()
