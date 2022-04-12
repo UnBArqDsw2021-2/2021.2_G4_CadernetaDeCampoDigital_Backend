@@ -155,6 +155,33 @@ class PropriedadeAPIViewTest(APITestMixin, TestCase):
         self.assertEqual(1, len(response.json()))
 
 
+class PropriedadeSemTecnicoAPIViewTest(APITestMixin, TestCase):
+    url = reverse_lazy("propriedade-list-sem-tecnico")
+
+    def setUp(self):
+        self.produtor = produtor.make(usuario__cpf='66326787009')
+        self.tecnico = tecnico.make(usuario__cpf='42205106058')
+        propriedade.make(tecnico=self.tecnico, _quantity=3)
+        self.prop_sem_tecnico = []
+        for prop in propriedade.make(tecnico=None, _quantity=3):
+            self.prop_sem_tecnico.append(str(prop.idPropriedade))
+
+    def test_list_propriedades_sem_tecnico(self):
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 3)
+        self.assertTrue(set(self.prop_sem_tecnico).issubset(
+            [prop["idPropriedade"] for prop in response.json()]
+        ))
+
+    def test_list_vazio_propriedades_sem_tecnico(self):
+        Propriedade.objects.filter(tecnico__isnull=True).delete()
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(response.json()), 0)
+        self.assertEqual(response.json(), [])
+
+
 class PropriedadeRetrieveUpdateAPIViewTest(APITestMixin, TestCase):
 
     def setUp(self):
