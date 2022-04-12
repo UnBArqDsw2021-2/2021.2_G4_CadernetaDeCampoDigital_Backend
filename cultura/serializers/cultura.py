@@ -1,3 +1,5 @@
+from agrotoxico.serializers.agrotoxico import AgrotoxicoListSerializer
+
 from cultura.models import Cultura
 
 from rest_framework import serializers
@@ -9,8 +11,9 @@ class CulturaSerializer(serializers.ModelSerializer):
         max_length=80,
         validators=[UniqueValidator(queryset=Cultura.objects.all())]
     )
+    agrotoxicos = AgrotoxicoListSerializer(read_only=True, many=True)
 
     class Meta:
         model = Cultura
-        fields = ('idCultura', 'nome')
-        read_only_fields = ('idCultura',)
+        fields = ('idCultura', 'nome', 'agrotoxicos')
+        read_only_fields = ('idCultura', 'agrotoxicos')
