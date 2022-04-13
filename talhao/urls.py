@@ -11,9 +11,9 @@ urlpatterns = [
         url(r'^$', TalhaoAPIView.as_view(), name='talhao-create'),
 
         url(
-            r'^(?P<idTalhao>{})/historico/plantio/$'.format(UUID4_URL),
+            r'^(?P<idTalhao>{})/$'.format(UUID4_URL),
             TalhaoDetailAPIView.as_view(),
-            name='talhao-historico-plantio'
+            name='talhao-detail-historico'
         )
     ]))
 ]

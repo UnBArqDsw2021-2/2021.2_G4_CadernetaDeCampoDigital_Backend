@@ -91,7 +91,7 @@ class TalhaoDetailAPIViewTest(APITestMixin, TestCase):
         plantio.make(talhao=self.talhao, estado=PLANTADO)
         self.plantios = plantio.make(talhao=self.talhao, estado=FINALIZADO, _quantity=7)
         self.url = reverse_lazy(
-            'talhao-historico-plantio',
+            'talhao-detail-historico',
             kwargs={'idTalhao': self.talhao.idTalhao}
         )
 
@@ -109,7 +109,7 @@ class TalhaoDetailAPIViewTest(APITestMixin, TestCase):
 
     def test_nao_lista_historico_plantios_talhao_inexistente(self):
         url = reverse_lazy(
-            'talhao-historico-plantio',
+            'talhao-detail-historico',
             kwargs={'idTalhao': '00000000-0000-4000-8000-000000000000'}
         )
 
