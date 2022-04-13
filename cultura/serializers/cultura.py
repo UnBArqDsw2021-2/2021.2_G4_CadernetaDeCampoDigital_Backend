@@ -12,8 +12,9 @@ class CulturaSerializer(serializers.ModelSerializer):
         validators=[UniqueValidator(queryset=Cultura.objects.all())]
     )
     agrotoxicos = AgrotoxicoListSerializer(read_only=True, many=True)
+    foto = serializers.ImageField(required=True, allow_empty_file=False)
 
     class Meta:
         model = Cultura
-        fields = ('idCultura', 'nome', 'agrotoxicos')
+        fields = ('idCultura', 'nome', 'agrotoxicos', 'foto')
         read_only_fields = ('idCultura', 'agrotoxicos')
