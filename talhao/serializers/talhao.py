@@ -19,7 +19,7 @@ class TalhaoSerializer(serializers.ModelSerializer):
         ]
 
 
-class TalhaoListSerializer(serializers.ModelSerializer):
+class TalhaoDetailSerializer(serializers.ModelSerializer):
     plantio = serializers.SerializerMethodField()
 
     class Meta:
@@ -28,7 +28,7 @@ class TalhaoListSerializer(serializers.ModelSerializer):
         read_only_fields = fields
 
     def get_plantio(self, talhao):
-        if bool(self.context):
+        if self.context.get('plantio_estado_filtro'):
             [estados] = [*self.context.values()]
             plantios = talhao.plantio_set.filter(
                 estado__in=estados
