@@ -1,0 +1,30 @@
+version: "2"
+checks:
+  similar-code:
+    enabled: false
+  method-complexity:
+    config:
+      threshold: 7
+plugins:
+  pep8:
+    enabled: true
+    checks:
+      E501:
+        enabled: false
+  Radon:
+    enabled: true
+  SonarPython:
+    enabled: true    
+exclude_patterns:
+- "config/"
+- "db/"
+- "dist/"
+- "features/"
+- "**/spec/"
+- "**/test/"
+- "**/tests/"
+- "**/vendor/"
+- "**/*.d.ts"
+- "**/migrations/"
+- "scripts/"
+- "cadernetaDigital/"

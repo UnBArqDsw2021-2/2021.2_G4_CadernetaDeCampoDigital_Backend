@@ -11,13 +11,19 @@ from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = config('SECRET_KEY', default='not avaliable')
 DEBUG = config('DEBUG', default=True, cast=bool)
+ENV = config('ENV', 'Development')
 ALLOWED_HOSTS = ['*']
 
 LOCAL_APPS = (
     'core',
-
     'usuario',
-    'produtor'
+    'produtor',
+    'tecnico',
+    'propriedade',
+    'talhao',
+    'plantio',
+    'cultura',
+    'agrotoxico',
 )
 
 INSTALLED_APPS = (
@@ -39,6 +45,7 @@ INSTALLED_APPS = (
 
 MIDDLEWARE = (
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -71,6 +78,9 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'cadernetaDigital.wsgi.application'
+
+# Configuração CORS
+CORS_ORIGIN_ALLOW_ALL = True
 
 # Database
 DATABASE_URL = 'postgres://postgres:postgres@postgres:5432/postgres'
@@ -108,6 +118,13 @@ PHONENUMBER_DEFAULT_REGION = 'BR'
 # https://docs.djangoproject.com/en/4.0/howto/static-files/
 STATIC_URL = config('STATIC_URL', default='/static/')
 
+# Storage
+DEFAULT_FILE_STORAGE = 'storages.backends.azure_storage.AzureStorage' if ENV == 'Production' else 'django.core.files.storage.FileSystemStorage'
+AZURE_CONNECTION_STRING = config('AZURE_CONNECTION_STRING', '')
+AZURE_CONTAINER = 'images'
+MEDIA_ROOT = 'media'
+MEDIA_URL = '/media/'
+
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.UUIDField'
 
@@ -124,4 +141,6 @@ SIMPLE_JWT = {
     'REFRESH_TOKEN_LIFETIME': timedelta(days=10),
     'ROTATE_REFRESH_TOKENS': False,
     'BLACKLIST_AFTER_ROTATION': True,
+    # Campo identificador padrão do usuario
+    'USER_ID_FIELD': 'idUsuario',
 }

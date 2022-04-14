@@ -8,6 +8,7 @@ services:
             - 5000:5432
     caderneta_digital:
         build: .
+        container_name: caderneta_digital_backend
         environment:
             - DJANGO_SETTINGS_MODULE=cadernetaDigital.settings
         volumes:

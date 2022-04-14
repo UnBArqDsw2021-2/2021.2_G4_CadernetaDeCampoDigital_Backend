@@ -1,0 +1,1 @@
+from .tecnico import *  # noqa
