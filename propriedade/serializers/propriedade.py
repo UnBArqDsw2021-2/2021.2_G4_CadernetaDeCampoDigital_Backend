@@ -1,3 +1,4 @@
+from core.serializers.dynamic_fields_model import DynamicFieldsModelSerializer
 from core.serializers.fields import CEPField, CPFField
 from core.consts.plantios import PLANTADO, CARENCIA, COLHEITA
 
@@ -14,7 +15,7 @@ from tecnico.serializers.tecnico import TecnicoSerializer
 from talhao.serializers.talhao import TalhaoDetailSerializer
 
 
-class PropriedadeSerializer(serializers.ModelSerializer):
+class PropriedadeSerializer(DynamicFieldsModelSerializer):
     produtor = CPFField()
     tecnico = CPFField(required=False)
     cep = CEPField()
